@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The portfolio of Reem Ashraf — graphic designer and animator. Explore illustrations, visual stories, and the sketches behind them.">
+  <meta name="theme-color" content="#f6f3eb"><title>Reem Ashraf — Designer & Animator</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#work">Skip to selected work</a>
+  <header class="header"><a class="wordmark" href="#" aria-label="Reem Ashraf home">reem<span>✳</span></a><nav aria-label="Main navigation"><a href="#work">Selected work <span>↗</span></a><a href="#about">About</a></nav><span class="header-note">DESIGNER & ANIMATOR</span></header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow"><span class="dot"></span> THE PORTFOLIO OF REEM ASHRAF</p><h1 id="hero-title">A little strange.<br>A lot of <em>story.</em></h1><p class="intro">Characters with personality. Worlds with a life of their own. Graphic design, illustration & a love for animation.</p><a class="pill" href="#work">Step into my world <span>↘</span></a><p class="tiny-note">Every finished piece starts with a little scribble.</p></div>
+      <div class="hero-art"><div class="orbit" aria-hidden="true"></div><button class="hero-picture" data-project="ouroboros" aria-label="Explore Frankenstein Ouroboros and reveal its sketch"><img src="assets/ouroboros-final.webp" alt="Colorful winding creature surrounded by leaves and flowers on black" fetchpriority="high"></button><span class="art-star" aria-hidden="true">✳</span><span class="hand-note">look a little closer <span>⤴</span></span><div class="hero-stamp">FROM FIRST LINE<br><strong>TO FINAL FORM</strong></div></div>
+    </section>
+    <div class="ticker" aria-hidden="true"><span>IMAGINATION IN THE DETAILS</span><b>✳</b><span>SKETCHES INTO STORIES</span><b>✳</b><span>A LITTLE CURIOUS, ALWAYS</span><b>✳</b></div>
+    <section id="work" class="work"><div class="section-heading"><div><p class="eyebrow">01 / THE COLLECTION</p><h2>Selected <em>work.</em></h2></div><p>There’s more beneath the surface.<br>Open a piece. Move your cursor. Find its first lines.</p></div>
+      <div class="filters" role="group" aria-label="Filter work"><button class="active" data-filter="all" aria-pressed="true">All work <span>04</span></button><button data-filter="illustration" aria-pressed="false">Illustration</button><button data-filter="graphic" aria-pressed="false">Graphic design</button><button data-filter="background" aria-pressed="false">Backgrounds</button></div>
+      <div class="gallery">
+        <article class="project portrait" data-category="illustration"><button class="project-image dark" data-project="ouroboros"><img src="assets/ouroboros-final.webp" alt="Frankenstein Ouroboros, a vibrant illustrated creature" loading="lazy"><span class="reveal-tag">✳ Explore the sketch</span><span class="project-arrow" aria-hidden="true">↗</span></button><div class="project-meta"><h3>Frankenstein Ouroboros</h3><span>ILLUSTRATION / 01</span></div></article>
+        <article class="project portrait offset" data-category="graphic"><button class="project-image teal" data-project="behar"><img src="assets/behar-final.webp" alt="Behar book cover with intertwined colorful characters" loading="lazy"><span class="reveal-tag">✳ Explore the sketch</span><span class="project-arrow" aria-hidden="true">↗</span></button><div class="project-meta"><h3>Behar</h3><span>GRAPHIC DESIGN / 02</span></div></article>
+        <article class="project landscape" data-category="background"><button class="project-image" data-project="studio"><img src="assets/studio-final.webp" alt="Illustrated sunlit studio with teal walls and red chairs" loading="lazy"><span class="reveal-tag">✳ Explore the sketch</span><span class="project-arrow" aria-hidden="true">↗</span></button><div class="project-meta"><h3>The sunlit studio</h3><span>BACKGROUND ART / 03</span></div></article>
+        <article class="project landscape offset" data-category="background"><button class="project-image" data-project="room"><img src="assets/room-final.webp" alt="Illustrated warm, shadowy room with hanging lamps" loading="lazy"><span class="reveal-tag">✳ Explore the sketch</span><span class="project-arrow" aria-hidden="true">↗</span></button><div class="project-meta"><h3>A room of stories</h3><span>BACKGROUND ART / 04</span></div></article>
+      </div>
+    </section>
+    <section id="about" class="about"><div class="about-symbol" aria-hidden="true">✳</div><div><p class="eyebrow">02 / BEHIND THE WORK</p><h2>Hi, I’m Reem.<br>I think in <em>pictures.</em></h2><p>I’m a graphic designer and animator. My work brings together expressive characters, illustrated worlds, and visual storytelling—from the first pencil line to the last splash of color.</p><div class="disciplines"><span>Graphic design</span><span>Illustration</span><span>Animation</span></div></div></section>
+  </main>
+  <footer><a class="wordmark" href="#">reem<span>✳</span></a><p>Reem Ashraf · A world in the making.</p><a href="#work">Back to the work ↑</a></footer>
+  <dialog id="viewer" aria-labelledby="viewer-title" aria-describedby="viewer-help"><div class="viewer-top"><div><p class="eyebrow" id="viewer-category"></p><h2 id="viewer-title"></h2></div><button id="close-viewer" class="close" aria-label="Close artwork">×</button></div><p id="viewer-help">Move over the artwork to uncover the sketch in a ripple of water. On touch screens, drag your finger.</p><div class="art-stage" id="art-stage" tabindex="0" role="group" aria-label="Artwork comparison. Use arrow keys to move the sketch lens."><img id="final-image" alt=""><img id="sketch-image" alt="" aria-hidden="true"><span class="lens-ring" aria-hidden="true"></span><span class="stage-label" aria-hidden="true">FINAL + FIRST LINES</span></div><div class="viewer-controls"><label for="lens-size">Ripple size <input id="lens-size" type="range" min="45" max="180" value="100"></label><button id="toggle-sketch" aria-pressed="false">Show full sketch</button></div><p class="keyboard-hint">Keyboard: focus the artwork and use arrow keys · Escape to close</p><figure id="book-preview" hidden><img src="assets/behar-book.webp" alt="Behar illustrated cover presented on an open book" loading="lazy"><figcaption>The cover, in context.</figcaption></figure></dialog>
+  <script src="app.js"></script>
+</body></html>
+
