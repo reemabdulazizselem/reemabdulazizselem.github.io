@@ -16,6 +16,38 @@ const waterContext = water.getContext('2d');
 const mask = document.createElement('canvas');
 const maskContext = mask.getContext('2d');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const logoEyes = [...document.querySelectorAll('.logo-eye')];
+let gazeFrame = 0;
+let gazeTarget = null;
+function updateGaze() {
+  gazeFrame = 0;
+  const offsets = logoEyes.map(eye => {
+    const bounds = eye.querySelector('.eye-white').getBoundingClientRect();
+    if (!gazeTarget || reducedMotion.matches) return { x: 0, y: 0 };
+    const dx = gazeTarget.x - bounds.left - bounds.width / 2;
+    const dy = gazeTarget.y - bounds.top - bounds.height / 2;
+    const distance = Math.hypot(dx, dy);
+    const strength = Math.min(1, distance / 90);
+    return { x: distance ? dx / distance * 3 * strength : 0, y: distance ? dy / distance * 1.6 * strength : 0 };
+  });
+  logoEyes.forEach((eye, index) => {
+    eye.querySelector('.eye-pupil').style.transform = `translate(${offsets[index].x}px, ${offsets[index].y}px)`;
+  });
+}
+function scheduleGaze() {
+  if (!gazeFrame) gazeFrame = requestAnimationFrame(updateGaze);
+}
+function resetGaze() { gazeTarget = null; scheduleGaze(); }
+window.addEventListener('pointermove', event => {
+  if (event.pointerType === 'touch' || reducedMotion.matches) return;
+  gazeTarget = { x: event.clientX, y: event.clientY };
+  scheduleGaze();
+}, { passive: true });
+document.addEventListener('pointerout', event => { if (!event.relatedTarget) resetGaze(); });
+window.addEventListener('blur', resetGaze);
+window.addEventListener('scroll', scheduleGaze, { passive: true });
+window.addEventListener('resize', scheduleGaze);
+reducedMotion.addEventListener('change', resetGaze);
 let waterFrame = 0;
 let lastFrame = 0;
 let lastDrop = 0;

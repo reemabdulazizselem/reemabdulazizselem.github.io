@@ -13,6 +13,15 @@
 .full-sketch .water-reveal{visibility:hidden}
 .stage-label{z-index:2}
 
+/* The counters of the header's two e letters double as curious eyes. */
+.wordmark-eyes{display:inline-flex;align-items:baseline}
+.wordmark-eyes .logo-letters{display:inline-flex;align-items:baseline;color:var(--ink);font-size:inherit;margin:0;letter-spacing:-2px}
+.logo-eye{display:block;width:.55em;height:.59em;overflow:visible;flex:none;margin-right:-1px}
+.logo-eye .eye-white{fill:var(--paper)}
+.eye-pupil{transition:transform .12s ease-out}
+.wordmark-eyes .logo-spark{margin-left:5px}
+@media(prefers-reduced-motion:reduce){.eye-pupil{transform:none!important;transition:none}}
+
 /* Native-scroll motion: layered artwork, section entrances, and a moving ribbon. */
 html{scroll-padding-top:125px}
 .header{position:sticky;top:0;z-index:10;background:var(--paper);transition:background .3s,box-shadow .3s}
