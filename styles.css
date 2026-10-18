@@ -59,3 +59,24 @@ html{scroll-padding-top:125px}
 .hero-picture .featured-sketch{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;clip-path:inset(0 100% 0 0)}
 .hero-picture{overflow:hidden}
 .featured-wave-layer{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(5px 1px 5px #101d2466) drop-shadow(-2px 0 1px #ffffffb3)}
+
+/* Pointer artwork is decorative, never intercepts input, and stays off touch screens. */
+.art-cursor{position:fixed;inset:0;z-index:2147483647;pointer-events:none;visibility:hidden}
+.art-cursor.visible{visibility:visible}
+.cursor-dot,.cursor-ring,.cursor-ripple{position:absolute;left:0;top:0;display:grid;place-items:center;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.cursor-dot{width:5px;height:5px;background:var(--ink);box-shadow:0 0 0 1px #f6f3eb80;z-index:2}
+.cursor-ring{width:30px;height:30px;border:1px solid var(--orange);background:#e4664008;transition:translate 80ms ease-out,width .18s,height .18s,background .18s,scale .12s;transform-origin:0 0}
+.cursor-ring>span{opacity:0;font:600 10px 'DM Sans',Arial,sans-serif;color:var(--paper);letter-spacing:.3px;transition:opacity .15s}
+.cursor-ripple{width:24px;height:24px;border:1px solid var(--orange);opacity:0}
+.art-cursor[data-mode="explore"] .cursor-ring{width:68px;height:68px;background:#252b27e8;border-color:var(--orange)}
+.art-cursor[data-mode="explore"] .cursor-ring>span{opacity:1}
+.art-cursor[data-mode="explore"] .cursor-dot{opacity:0}
+.art-cursor[data-mode="link"] .cursor-ring{width:21px;height:21px;background:#e4664033}
+.art-cursor[data-mode="eye"] .cursor-ring{width:12px;height:12px;background:transparent}
+.art-cursor[data-mode="eye"] .cursor-dot{width:3px;height:3px}
+.art-cursor.pressed .cursor-ring{scale:.78}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  html.cursor-active,html.cursor-active *{cursor:none!important}
+  html.cursor-text,html.cursor-text *{cursor:text!important}
+}
+@media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.art-cursor{display:none!important}}

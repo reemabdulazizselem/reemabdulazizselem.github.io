@@ -504,3 +504,66 @@ async function previewOnArrival() {
 if (document.readyState === 'complete') previewOnArrival();
 else window.addEventListener('load', previewOnArrival, { once: true });
 document.addEventListener('visibilitychange', previewOnArrival);
+
+// Event-driven cursor: CSS handles the short easing; no idle animation loop.
+const cursorDevice = window.matchMedia('(hover: hover) and (pointer: fine)');
+const artCursor = document.createElement('div');
+artCursor.className = 'art-cursor';
+artCursor.setAttribute('aria-hidden', 'true');
+artCursor.innerHTML = '<span class="cursor-dot"></span><span class="cursor-ring"><span>Explore</span></span><span class="cursor-ripple"></span>';
+document.body.append(artCursor);
+const cursorDot = artCursor.querySelector('.cursor-dot');
+const cursorRing = artCursor.querySelector('.cursor-ring');
+const cursorRipple = artCursor.querySelector('.cursor-ripple');
+let cursorRippleAnimation;
+function hideArtCursor() {
+  document.documentElement.classList.remove('cursor-active', 'cursor-text');
+  artCursor.classList.remove('visible', 'pressed');
+  cursorRippleAnimation?.cancel();
+}
+function moveArtCursor(event) {
+  if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || document.hidden) {
+    hideArtCursor();
+    return;
+  }
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  const nativeControl = target.closest('input,textarea,select,[contenteditable="true"]');
+  if (nativeControl) { hideArtCursor(); return; }
+  const eye = target.closest('.logo-eye');
+  const artwork = target.closest('[data-project]');
+  const clickable = target.closest('a,button,[role="button"]');
+  const text = !clickable && !eye && target.closest('p,h1,h2,h3,label,figcaption');
+  const mode = eye ? 'eye' : artwork ? 'explore' : clickable ? 'link' : text ? 'text' : 'default';
+  const host = target.closest('dialog[open]') || document.body;
+  if (artCursor.parentElement !== host) host.append(artCursor);
+  artCursor.dataset.mode = mode;
+  document.documentElement.classList.toggle('cursor-active', mode !== 'text');
+  document.documentElement.classList.toggle('cursor-text', mode === 'text');
+  artCursor.classList.toggle('visible', mode !== 'text');
+  const position = `${event.clientX}px ${event.clientY}px`;
+  cursorDot.style.translate = position;
+  cursorRing.style.translate = position;
+}
+window.addEventListener('pointermove', moveArtCursor, { passive: true });
+document.addEventListener('pointerover', moveArtCursor, { passive: true });
+document.addEventListener('pointerdown', event => {
+  moveArtCursor(event);
+  if (!artCursor.classList.contains('visible') || event.button !== 0) return;
+  artCursor.classList.add('pressed');
+  cursorRippleAnimation?.cancel();
+  cursorRipple.style.translate = `${event.clientX}px ${event.clientY}px`;
+  cursorRippleAnimation = cursorRipple.animate([
+    { transform: 'translate(-50%,-50%) scale(.5)', opacity: .6 },
+    { transform: 'translate(-50%,-50%) scale(2.2)', opacity: 0 }
+  ], { duration: 420, easing: 'ease-out' });
+}, { passive: true });
+window.addEventListener('pointerup', () => artCursor.classList.remove('pressed'), { passive: true });
+window.addEventListener('pointercancel', hideArtCursor);
+document.addEventListener('pointerout', event => { if (!event.relatedTarget) hideArtCursor(); });
+window.addEventListener('blur', hideArtCursor);
+document.addEventListener('visibilitychange', hideArtCursor);
+document.addEventListener('keydown', event => { if (event.key === 'Tab' || event.key === 'Escape') hideArtCursor(); });
+document.addEventListener('close', hideArtCursor, true);
+cursorDevice.addEventListener('change', hideArtCursor);
+reducedMotion.addEventListener('change', hideArtCursor);
