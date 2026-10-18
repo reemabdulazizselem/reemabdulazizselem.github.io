@@ -441,7 +441,7 @@ function waveBand(progress) {
   for (let y = 100; y >= 0; y -= 5) points.push(edge(y, 1));
   return `polygon(${points.join(',')})`;
 }
-async function previewFeaturedSketch() {
+async function previewFeaturedSketch(intro = false) {
   if (featuredPreviewActive || document.hidden || viewer.open) return;
   featuredPreviewActive = true;
   const version = ++featuredPreviewVersion;
@@ -451,9 +451,13 @@ async function previewFeaturedSketch() {
     featuredSketch.alt = '';
     featuredSketch.setAttribute('aria-hidden', 'true');
     featuredSketch.src = 'assets/ouroboros-sketch.webp';
-    featuredArt.append(featuredSketch);
+    const waveLayer = document.createElement('span');
+    waveLayer.className = 'featured-wave-layer';
+    waveLayer.setAttribute('aria-hidden', 'true');
+    waveLayer.append(featuredSketch);
+    featuredArt.append(waveLayer);
   }
-  try { await featuredSketch.decode(); } catch { return; }
+  try { await featuredSketch.decode(); } catch { stopFeaturedPreview(); return; }
   if (!featuredPreviewActive || version !== featuredPreviewVersion) return;
   if (reducedMotion.matches) {
     featuredSketch.style.clipPath = waveBand(.5);
@@ -461,8 +465,11 @@ async function previewFeaturedSketch() {
   }
   featuredWave = featuredSketch.animate(
     Array.from({ length: 41 }, (_, i) => ({ clipPath: waveBand(i / 40), offset: i / 40 })),
-    { duration: 1800, easing: 'ease-in-out' }
+    { duration: 2200, easing: 'ease-in-out' }
   );
+  featuredWave.onfinish = () => {
+    if (intro && version === featuredPreviewVersion) featuredPreviewActive = false;
+  };
 }
 function stopFeaturedPreview() {
   featuredPreviewActive = false;
@@ -484,3 +491,16 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopFeaturedPreview();
 });
 reducedMotion.addEventListener('change', stopFeaturedPreview);
+
+// One entrance preview after the final artwork is ready; never a repeating loop.
+let introWavePending = true;
+async function previewOnArrival() {
+  if (!introWavePending || document.hidden) return;
+  introWavePending = false;
+  if (reducedMotion.matches) return;
+  try { await featuredArt.querySelector('img').decode(); } catch { return; }
+  previewFeaturedSketch(true);
+}
+if (document.readyState === 'complete') previewOnArrival();
+else window.addEventListener('load', previewOnArrival, { once: true });
+document.addEventListener('visibilitychange', previewOnArrival);
