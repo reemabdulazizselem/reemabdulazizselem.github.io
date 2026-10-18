@@ -95,6 +95,52 @@ window.addEventListener('blur', resetGaze);
 window.addEventListener('scroll', scheduleGaze, { passive: true });
 window.addEventListener('resize', scheduleGaze);
 reducedMotion.addEventListener('change', resetGaze);
+
+// Eyelids cover only the eye openings, leaving the letter shapes and gaze intact.
+const eyelids = new Map();
+const blinkAnimations = new Map();
+logoEyes.forEach(eye => {
+  const lid = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+  for (const [name, value] of Object.entries({ cx: 13, cy: 8.6, rx: 6.4, ry: 4.5, class: 'eye-lid' })) {
+    lid.setAttribute(name, value);
+  }
+  eye.append(lid);
+  eyelids.set(eye, lid);
+  eye.addEventListener('click', () => blinkEye(eye));
+});
+function blinkEye(eye) {
+  if (reducedMotion.matches || document.hidden) return;
+  blinkAnimations.get(eye)?.cancel();
+  const animation = eyelids.get(eye).animate([
+    { transform: 'scaleY(0)', offset: 0 },
+    { transform: 'scaleY(1)', offset: .4 },
+    { transform: 'scaleY(1)', offset: .55 },
+    { transform: 'scaleY(0)', offset: 1 }
+  ], { duration: 240, easing: 'ease-in-out' });
+  blinkAnimations.set(eye, animation);
+  animation.onfinish = () => blinkAnimations.delete(eye);
+}
+let blinkTimer;
+function scheduleBlink() {
+  clearTimeout(blinkTimer);
+  if (document.hidden || reducedMotion.matches) {
+    blinkAnimations.forEach(animation => animation.cancel());
+    blinkAnimations.clear();
+    return;
+  }
+  blinkTimer = setTimeout(() => {
+    if (!document.querySelector('dialog[open]')) {
+      logoEyes.forEach(eye => {
+        const rect = eye.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) blinkEye(eye);
+      });
+    }
+    scheduleBlink();
+  }, 4000 + Math.random() * 4000);
+}
+document.addEventListener('visibilitychange', scheduleBlink);
+reducedMotion.addEventListener('change', scheduleBlink);
+scheduleBlink();
 let waterFrame = 0;
 let lastFrame = 0;
 let lastDrop = 0;

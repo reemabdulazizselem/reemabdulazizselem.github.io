@@ -24,6 +24,7 @@
 .logo-eye{display:block;width:.55em;height:.59em;overflow:visible;flex:none;margin-right:-1px}
 .logo-eye .eye-white{fill:var(--paper)}
 .eye-pupil{transition:transform .12s ease-out}
+.eye-lid{fill:currentColor;transform-box:view-box;transform-origin:13px 8.6px;transform:scaleY(0);pointer-events:none}
 .wordmark-eyes .logo-spark{margin-left:5px}
 @media(prefers-reduced-motion:reduce){.eye-pupil{transform:none!important;transition:none}}
 
