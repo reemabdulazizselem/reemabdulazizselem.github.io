@@ -27,6 +27,8 @@ Always believe in yourself and in what you can create. Above all, I hope you see
 — Your someone.`;
 const eyeClicks = new Map();
 const eyeWindowMs = 30_000;
+let eyeWindowStarted = null;
+let eyeAttemptInvalid = false;
 let dedicationDialog;
 
 function revealDedication() {
@@ -51,16 +53,22 @@ function revealDedication() {
   dedicationDialog.showModal();
 }
 
-// Event-only rolling window: no timer, polling, animation, storage, or requests.
+// A failed attempt stays blocked until its original 30-second window expires.
+// Checked only on clicks; the challenge needs no background timer.
 logoEyes.forEach(eye => eye.addEventListener('click', event => {
   event.preventDefault(); // Clicking an eye must not follow the logo's home link.
   const now = performance.now();
-  for (const [previousEye, clickedAt] of eyeClicks) {
-    if (now - clickedAt > eyeWindowMs) eyeClicks.delete(previousEye);
+  if (eyeWindowStarted === null || now - eyeWindowStarted > eyeWindowMs) {
+    eyeClicks.clear();
+    eyeWindowStarted = now;
+    eyeAttemptInvalid = false;
   }
-  eyeClicks.set(eye, now); // Repeated clicks never count as additional eyes.
+  if (eyeClicks.has(eye)) eyeAttemptInvalid = true;
+  if (eyeAttemptInvalid) return;
+  eyeClicks.set(eye, now);
   if (eyeClicks.size === logoEyes.length && logoEyes.length === 6) {
     eyeClicks.clear(); // Closing the note requires a fresh complete set to reopen.
+    eyeWindowStarted = null;
     revealDedication();
   }
 }));
