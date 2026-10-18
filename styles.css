@@ -64,16 +64,16 @@ html{scroll-padding-top:125px}
 .art-cursor{position:fixed;inset:0;z-index:2147483647;pointer-events:none;visibility:hidden}
 .art-cursor.visible{visibility:visible}
 .cursor-dot,.cursor-ring,.cursor-ripple{position:absolute;left:0;top:0;display:grid;place-items:center;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.cursor-dot{width:5px;height:5px;background:var(--ink);box-shadow:0 0 0 1px #f6f3eb80;z-index:2}
-.cursor-ring{width:30px;height:30px;border:1px solid var(--orange);background:#e4664008;transition:translate 80ms ease-out,width .18s,height .18s,background .18s,scale .12s;transform-origin:0 0}
+.cursor-dot{width:9px;height:9px;background:var(--ink);box-shadow:0 0 0 2px var(--paper),0 2px 5px #252b2740;z-index:2}
+.cursor-ring{width:40px;height:40px;border:2px solid var(--orange);background:#e4664024;box-shadow:0 0 0 1px #f6f3ebcc,0 3px 10px #252b2726;transition:translate 80ms ease-out,width .18s,height .18s,background .18s,scale .12s;transform-origin:0 0}
 .cursor-ring>span{opacity:0;font:600 10px 'DM Sans',Arial,sans-serif;color:var(--paper);letter-spacing:.3px;transition:opacity .15s}
 .cursor-ripple{width:24px;height:24px;border:1px solid var(--orange);opacity:0}
 .art-cursor[data-mode="explore"] .cursor-ring{width:68px;height:68px;background:#252b27e8;border-color:var(--orange)}
 .art-cursor[data-mode="explore"] .cursor-ring>span{opacity:1}
 .art-cursor[data-mode="explore"] .cursor-dot{opacity:0}
-.art-cursor[data-mode="link"] .cursor-ring{width:21px;height:21px;background:#e4664033}
-.art-cursor[data-mode="eye"] .cursor-ring{width:12px;height:12px;background:transparent}
-.art-cursor[data-mode="eye"] .cursor-dot{width:3px;height:3px}
+.art-cursor[data-mode="link"] .cursor-ring{width:30px;height:30px;background:#e4664060}
+.art-cursor[data-mode="eye"] .cursor-ring{width:14px;height:14px;background:transparent;box-shadow:0 0 0 1px #f6f3eb99}
+.art-cursor[data-mode="eye"] .cursor-dot{width:4px;height:4px;box-shadow:0 0 0 1px var(--paper)}
 .art-cursor.pressed .cursor-ring{scale:.78}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
   html.cursor-active,html.cursor-active *{cursor:none!important}
