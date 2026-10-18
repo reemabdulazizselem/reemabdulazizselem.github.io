@@ -17,6 +17,53 @@ const mask = document.createElement('canvas');
 const maskContext = mask.getContext('2d');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const logoEyes = [...document.querySelectorAll('.logo-eye')];
+// Hidden dedication: displayed only after the six-eye challenge.
+const dedicationMessage = `To the beautiful soul whose art reflects the beauty within.
+
+May your life be filled with joy, laughter, and success. May your inner light keep shining and guide you through the darker days.
+
+Always believe in yourself and in what you can create. Above all, I hope you see in yourself the same beauty you bring into the world.
+
+— Your someone.`;
+const eyeClicks = new Map();
+const eyeWindowMs = 30_000;
+let dedicationDialog;
+
+function revealDedication() {
+  if (!dedicationMessage.trim()) return;
+  if (!dedicationDialog) {
+    dedicationDialog = document.createElement('dialog');
+    dedicationDialog.className = 'dedication';
+    dedicationDialog.setAttribute('aria-labelledby', 'dedication-title');
+    const heading = document.createElement('h2');
+    heading.id = 'dedication-title';
+    heading.textContent = 'For Reem';
+    const message = document.createElement('p');
+    message.className = 'dedication-message';
+    message.textContent = dedicationMessage;
+    const close = document.createElement('button');
+    close.className = 'pill';
+    close.textContent = 'Close';
+    close.addEventListener('click', () => dedicationDialog.close());
+    dedicationDialog.append(heading, message, close);
+    document.body.append(dedicationDialog);
+  }
+  dedicationDialog.showModal();
+}
+
+// Event-only rolling window: no timer, polling, animation, storage, or requests.
+logoEyes.forEach(eye => eye.addEventListener('click', event => {
+  event.preventDefault(); // Clicking an eye must not follow the logo's home link.
+  const now = performance.now();
+  for (const [previousEye, clickedAt] of eyeClicks) {
+    if (now - clickedAt > eyeWindowMs) eyeClicks.delete(previousEye);
+  }
+  eyeClicks.set(eye, now); // Repeated clicks never count as additional eyes.
+  if (eyeClicks.size === logoEyes.length && logoEyes.length === 6) {
+    eyeClicks.clear(); // Closing the note requires a fresh complete set to reopen.
+    revealDedication();
+  }
+}));
 let gazeFrame = 0;
 let gazeTarget = null;
 function updateGaze() {
