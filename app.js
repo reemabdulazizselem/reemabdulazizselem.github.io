@@ -533,14 +533,14 @@ function moveArtCursor(event) {
   const eye = target.closest('.logo-eye');
   const artwork = target.closest('[data-project]');
   const clickable = target.closest('a,button,[role="button"]');
-  const text = !clickable && !eye && target.closest('p,h1,h2,h3,label,figcaption');
-  const mode = eye ? 'eye' : artwork ? 'explore' : clickable ? 'link' : text ? 'text' : 'default';
+
+  const mode = eye ? 'eye' : artwork ? 'explore' : clickable ? 'link' : 'default';
   const host = target.closest('dialog[open]') || document.body;
   if (artCursor.parentElement !== host) host.append(artCursor);
   artCursor.dataset.mode = mode;
-  document.documentElement.classList.toggle('cursor-active', mode !== 'text');
-  document.documentElement.classList.toggle('cursor-text', mode === 'text');
-  artCursor.classList.toggle('visible', mode !== 'text');
+  document.documentElement.classList.add('cursor-active');
+  document.documentElement.classList.remove('cursor-text');
+  artCursor.classList.add('visible');
   const position = `${event.clientX}px ${event.clientY}px`;
   cursorDot.style.translate = position;
   cursorRing.style.translate = position;
