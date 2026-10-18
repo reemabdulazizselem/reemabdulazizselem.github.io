@@ -54,3 +54,6 @@ html{scroll-padding-top:125px}
 .project.scroll-reveal.is-revealed .project-image img{scale:1}
 @media(max-width:600px){html{scroll-padding-top:100px}.ticker-group{min-width:max-content;gap:30px;padding:0 15px}.motion-ready .scroll-reveal{transform:translate3d(0,22px,0)}.about-symbol{transform-origin:42px center}}
 @media(prefers-reduced-motion:reduce){.motion-ready .scroll-reveal{opacity:1;transform:none;transition:none}.hero-art,.art-star,.about-symbol,.ticker-track{transform:none!important}.hero-picture,.hero-picture:hover{transform:rotate(7deg)}.hero-stamp{transform:rotate(13deg)}.project.scroll-reveal .project-image img{scale:1}}
+
+/* The sketch shares the final artwork's exact bounds; the wave never catches clicks. */
+.hero-picture .featured-sketch{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;clip-path:inset(0 100% 0 0)}

@@ -426,3 +426,61 @@ reducedMotion.addEventListener('change', () => {
 new ResizeObserver(scheduleScrollScene).observe(document.querySelector('main'));
 document.fonts.ready.then(scheduleScrollScene);
 updateScrollScene();
+
+// A single sketch wave previews the featured artwork on hover or keyboard focus.
+const featuredArt = document.querySelector('.hero-picture');
+let featuredSketch;
+let featuredWave;
+let featuredPreviewActive = false;
+let featuredPreviewVersion = 0;
+function waveBand(progress) {
+  const center = -35 + progress * 170;
+  const edge = (y, side) => `${center + side * 16 + Math.sin(y / 100 * Math.PI * 2 + progress * 4) * 6}% ${y}%`;
+  const points = [];
+  for (let y = 0; y <= 100; y += 5) points.push(edge(y, -1));
+  for (let y = 100; y >= 0; y -= 5) points.push(edge(y, 1));
+  return `polygon(${points.join(',')})`;
+}
+async function previewFeaturedSketch() {
+  if (featuredPreviewActive || document.hidden || viewer.open) return;
+  featuredPreviewActive = true;
+  const version = ++featuredPreviewVersion;
+  if (!featuredSketch) {
+    featuredSketch = new Image();
+    featuredSketch.className = 'featured-sketch';
+    featuredSketch.alt = '';
+    featuredSketch.setAttribute('aria-hidden', 'true');
+    featuredSketch.src = 'assets/ouroboros-sketch.webp';
+    featuredArt.append(featuredSketch);
+  }
+  try { await featuredSketch.decode(); } catch { return; }
+  if (!featuredPreviewActive || version !== featuredPreviewVersion) return;
+  if (reducedMotion.matches) {
+    featuredSketch.style.clipPath = waveBand(.5);
+    return;
+  }
+  featuredWave = featuredSketch.animate(
+    Array.from({ length: 41 }, (_, i) => ({ clipPath: waveBand(i / 40), offset: i / 40 })),
+    { duration: 1800, easing: 'ease-in-out' }
+  );
+}
+function stopFeaturedPreview() {
+  featuredPreviewActive = false;
+  featuredPreviewVersion++;
+  featuredWave?.cancel();
+  featuredWave = null;
+  if (featuredSketch) featuredSketch.style.clipPath = 'inset(0 100% 0 0)';
+}
+featuredArt.addEventListener('pointerenter', event => {
+  if (event.pointerType !== 'touch') previewFeaturedSketch();
+});
+featuredArt.addEventListener('pointerleave', stopFeaturedPreview);
+featuredArt.addEventListener('focus', () => {
+  if (featuredArt.matches(':focus-visible')) previewFeaturedSketch();
+});
+featuredArt.addEventListener('blur', stopFeaturedPreview);
+featuredArt.addEventListener('click', stopFeaturedPreview);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopFeaturedPreview();
+});
+reducedMotion.addEventListener('change', stopFeaturedPreview);
