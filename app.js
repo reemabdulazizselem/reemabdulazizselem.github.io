@@ -116,7 +116,7 @@ logoEyes.forEach(eye => {
   eyelids.set(eye, lid);
   eye.addEventListener('click', () => blinkEye(eye));
 });
-function blinkEye(eye) {
+function blinkEye(eye, duration = 240) {
   if (reducedMotion.matches || document.hidden) return;
   blinkAnimations.get(eye)?.cancel();
   const animation = eyelids.get(eye).animate([
@@ -124,10 +124,13 @@ function blinkEye(eye) {
     { transform: 'scaleY(1)', offset: .4 },
     { transform: 'scaleY(1)', offset: .55 },
     { transform: 'scaleY(0)', offset: 1 }
-  ], { duration: 240, easing: 'ease-in-out' });
+  ], { duration, easing: 'ease-in-out' });
   blinkAnimations.set(eye, animation);
   animation.onfinish = () => blinkAnimations.delete(eye);
 }
+const eyePairs = [...new Set(logoEyes.map(eye => eye.parentElement))].map(parent => ({
+  parent, eyes: logoEyes.filter(eye => eye.parentElement === parent)
+}));
 let blinkTimer;
 function scheduleBlink() {
   clearTimeout(blinkTimer);
@@ -138,9 +141,17 @@ function scheduleBlink() {
   }
   blinkTimer = setTimeout(() => {
     if (!document.querySelector('dialog[open]')) {
-      logoEyes.forEach(eye => {
-        const rect = eye.getBoundingClientRect();
-        if (rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) blinkEye(eye);
+      // Read the three logo bounds before animating, only once per interval.
+      const visiblePairs = eyePairs.filter(({ parent }) => {
+        const rect = parent.getBoundingClientRect();
+        return rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
+      });
+      visiblePairs.forEach(({ eyes }) => {
+        if (Math.random() < .35) {
+          blinkEye(eyes[Math.floor(Math.random() * eyes.length)], 320);
+        } else {
+          eyes.forEach(eye => blinkEye(eye));
+        }
       });
     }
     scheduleBlink();
