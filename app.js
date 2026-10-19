@@ -22,9 +22,7 @@ const dedicationMessage = `To the beautiful soul whose art reflects the beauty w
 
 May your life be filled with joy, laughter, and success. May your inner light keep shining and guide you through the darker days.
 
-Always believe in yourself and in what you can create. Above all, I hope you see in yourself the same beauty you bring into the world.
-
-— Your someone.`;
+Always believe in yourself and in what you can create. Above all, I hope you see in yourself the same beauty you bring into the world.`;
 const eyeClicks = new Map();
 const eyeWindowMs = 30_000;
 let eyeWindowStarted = null;
