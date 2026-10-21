@@ -1,8 +1,8 @@
 const projects = {
-  ouroboros: { title: 'Frankenstein Ouroboros', category: 'Illustration', prefix: 'ouroboros' },
-  behar: { title: 'Behar', category: 'Graphic design · Book cover', prefix: 'behar' },
-  studio: { title: 'The sunlit studio', category: 'Background art', prefix: 'studio' },
-  room: { title: 'A room of stories', category: 'Background art', prefix: 'room' }
+  ouroboros: { title: 'Frankenstein Ouroboros', category: 'Illustration', prefix: 'ouroboros', width: 1357, height: 1800 },
+  behar: { title: 'Behar', category: 'Graphic design · Book cover', prefix: 'behar', width: 1268, height: 1800 },
+  studio: { title: 'The sunlit studio', category: 'Background art', prefix: 'studio', width: 1800, height: 950 },
+  room: { title: 'A room of stories', category: 'Background art', prefix: 'room', width: 1800, height: 967 }
 };
 const viewer = document.querySelector('#viewer');
 const stage = document.querySelector('#art-stage');
@@ -53,7 +53,7 @@ function revealDedication() {
 
 // A failed attempt stays blocked until its original 30-second window expires.
 // Checked only on clicks; the challenge needs no background timer.
-logoEyes.forEach(eye => eye.addEventListener('click', event => {
+logoEyes.forEach(eye => (eye.parentElement?.classList?.contains('eye-hitbox') ? eye.parentElement : eye).addEventListener('click', event => {
   event.preventDefault(); // Clicking an eye must not follow the logo's home link.
   const now = performance.now();
   if (eyeWindowStarted === null || now - eyeWindowStarted > eyeWindowMs) {
@@ -72,10 +72,17 @@ logoEyes.forEach(eye => eye.addEventListener('click', event => {
 }));
 let gazeFrame = 0;
 let gazeTarget = null;
+let eyeBoundsDirty = true;
+let eyeBounds = [];
+const pupils = logoEyes.map(eye => eye.querySelector('.eye-pupil'));
 function updateGaze() {
   gazeFrame = 0;
-  const offsets = logoEyes.map(eye => {
-    const bounds = eye.querySelector('.eye-white').getBoundingClientRect();
+  if (eyeBoundsDirty) {
+    eyeBounds = logoEyes.map(eye => eye.querySelector('.eye-white').getBoundingClientRect());
+    eyeBoundsDirty = false;
+  }
+  const offsets = eyeBounds.map(bounds => {
+    if (bounds.bottom < 0 || bounds.top > window.innerHeight) return null;
     if (!gazeTarget || reducedMotion.matches) return { x: 0, y: 0 };
     const dx = gazeTarget.x - bounds.left - bounds.width / 2;
     const dy = gazeTarget.y - bounds.top - bounds.height / 2;
@@ -84,7 +91,7 @@ function updateGaze() {
     return { x: distance ? dx / distance * 3 * strength : 0, y: distance ? dy / distance * 1.6 * strength : 0 };
   });
   logoEyes.forEach((eye, index) => {
-    eye.querySelector('.eye-pupil').style.transform = `translate(${offsets[index].x}px, ${offsets[index].y}px)`;
+    if (offsets[index]) pupils[index].style.transform = `translate(${offsets[index].x}px, ${offsets[index].y}px)`;
   });
 }
 function scheduleGaze() {
@@ -98,8 +105,11 @@ window.addEventListener('pointermove', event => {
 }, { passive: true });
 document.addEventListener('pointerout', event => { if (!event.relatedTarget) resetGaze(); });
 window.addEventListener('blur', resetGaze);
-window.addEventListener('scroll', scheduleGaze, { passive: true });
-window.addEventListener('resize', scheduleGaze);
+function invalidateEyeBounds() { eyeBoundsDirty = true; scheduleGaze(); }
+window.addEventListener('scroll', invalidateEyeBounds, { passive: true });
+window.addEventListener('resize', invalidateEyeBounds);
+document.fonts.ready.then(invalidateEyeBounds);
+window.addEventListener('load', invalidateEyeBounds);
 reducedMotion.addEventListener('change', resetGaze);
 
 // Eyelids cover only the eye openings, leaving the letter shapes and gaze intact.
@@ -112,7 +122,7 @@ logoEyes.forEach(eye => {
   }
   eye.append(lid);
   eyelids.set(eye, lid);
-  eye.addEventListener('click', () => blinkEye(eye));
+  (eye.parentElement?.classList?.contains('eye-hitbox') ? eye.parentElement : eye).addEventListener('click', () => blinkEye(eye));
 });
 function blinkEye(eye, duration = 240) {
   if (reducedMotion.matches || document.hidden) return;
@@ -126,8 +136,9 @@ function blinkEye(eye, duration = 240) {
   blinkAnimations.set(eye, animation);
   animation.onfinish = () => blinkAnimations.delete(eye);
 }
-const eyePairs = [...new Set(logoEyes.map(eye => eye.parentElement))].map(parent => ({
-  parent, eyes: logoEyes.filter(eye => eye.parentElement === parent)
+const eyePairParent = eye => eye.parentElement?.classList?.contains('eye-hitbox') ? eye.parentElement.parentElement : eye.parentElement;
+const eyePairs = [...new Set(logoEyes.map(eyePairParent))].map(parent => ({
+  parent, eyes: logoEyes.filter(eye => eyePairParent(eye) === parent)
 }));
 let blinkTimer;
 function scheduleBlink() {
@@ -178,6 +189,7 @@ function resizeWater() {
     canvas.width = Math.round(waterWidth * pixelRatio);
     canvas.height = Math.round(waterHeight * pixelRatio);
   }
+  startWater();
 }
 new ResizeObserver(resizeWater).observe(stage);
 
@@ -210,7 +222,7 @@ function clearWater() {
 }
 function animateWater(now) {
   waterFrame = 0;
-  if (!viewer.open || stage.classList.contains('full-sketch')) { clearWater(); return; }
+  if (document.hidden || !viewer.open || stage.classList.contains('full-sketch')) { clearWater(); return; }
   const active = stage.classList.contains('revealing');
   const dt = Math.min(40, now - (lastFrame || now - 16));
   lastFrame = now;
@@ -223,6 +235,7 @@ function animateWater(now) {
   fluid.x += dx * smoothing;
   fluid.y += dy * smoothing;
   fluid.strength += ((active ? 1 : 0) - fluid.strength) * (1 - Math.exp(-dt / (active ? 65 : 170)));
+  if (reducedMotion.matches) fluid.strength = active ? 1 : 0;
   const phase = reducedMotion.matches ? 0 : now / 430;
   const speed = Math.hypot(dx, dy);
   if (active && speed > 2 && now - lastDrop > 28 && !reducedMotion.matches) {
@@ -253,17 +266,24 @@ function animateWater(now) {
     waterContext.drawImage(mask, 0, 0);
     waterContext.globalCompositeOperation = 'source-over';
   }
-  if (active || fluid.strength > .01 || drops.length) waterFrame = requestAnimationFrame(animateWater);
-  else clearWater();
+  const moving = Math.hypot(target.x - fluid.x, target.y - fluid.y) > .25;
+  const fading = Math.abs((active ? 1 : 0) - fluid.strength) > .01;
+  if (!reducedMotion.matches && (moving || fading || drops.length)) waterFrame = requestAnimationFrame(animateWater);
+  else if (!active) clearWater();
+  else lastFrame = 0; // Keep the settled mask without drawing more frames.
 }
 function startWater() {
-  if (!waterFrame && viewer.open && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
+  if (!document.hidden && !waterFrame && viewer.open && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
 }
+sketch.addEventListener('load', startWater);
+reducedMotion.addEventListener('change', () => { clearWater(); startWater(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearWater(); else startWater(); });
 new MutationObserver(startWater).observe(stage, { attributes: true, attributeFilter: ['class'] });
 function setPosition(x, y) {
   position = { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) };
   stage.style.setProperty('--x', `${position.x}%`);
   stage.style.setProperty('--y', `${position.y}%`);
+  startWater();
 }
 function resetFullSketch() {
   stage.classList.remove('full-sketch');
@@ -277,6 +297,8 @@ document.querySelectorAll('[data-project]').forEach(button => {
     document.querySelector('#viewer-title').textContent = project.title;
     document.querySelector('#viewer-category').textContent = project.category;
     const final = document.querySelector('#final-image');
+    final.width = project.width;
+    final.height = project.height;
     final.src = `assets/${project.prefix}-final.webp`;
     final.alt = `${project.title} — finished artwork`;
     document.querySelector('#sketch-image').src = `assets/${project.prefix}-sketch.webp`;
@@ -327,7 +349,10 @@ stage.addEventListener('keydown', event => {
   setPosition(position.x + dx, position.y + dy);
   stage.classList.add('revealing');
 });
-document.querySelector('#lens-size').addEventListener('input', event => stage.style.setProperty('--radius', `${event.target.value}px`));
+document.querySelector('#lens-size').addEventListener('input', event => {
+  stage.style.setProperty('--radius', `${event.target.value}px`);
+  startWater();
+});
 toggle.addEventListener('click', () => {
   const full = stage.classList.toggle('full-sketch');
   if (full) clearWater();
@@ -421,7 +446,7 @@ reducedMotion.addEventListener('change', () => {
   scheduleScrollScene();
 });
 // Filters and font loading can change section heights without a scroll event.
-new ResizeObserver(scheduleScrollScene).observe(document.querySelector('main'));
+new ResizeObserver(() => { scheduleScrollScene(); invalidateEyeBounds(); }).observe(document.querySelector('main'));
 document.fonts.ready.then(scheduleScrollScene);
 updateScrollScene();
 
@@ -448,7 +473,11 @@ async function previewFeaturedSketch(intro = false) {
     featuredSketch.className = 'featured-sketch';
     featuredSketch.alt = '';
     featuredSketch.setAttribute('aria-hidden', 'true');
-    featuredSketch.src = 'assets/ouroboros-sketch.webp';
+    featuredSketch.width = 1357;
+    featuredSketch.height = 1800;
+    featuredSketch.sizes = '(max-width: 600px) 60vw, 480px';
+    featuredSketch.srcset = 'assets/ouroboros-sketch-480.webp 480w, assets/ouroboros-sketch-960.webp 960w';
+    featuredSketch.src = 'assets/ouroboros-sketch-960.webp';
     const waveLayer = document.createElement('span');
     waveLayer.className = 'featured-wave-layer';
     waveLayer.setAttribute('aria-hidden', 'true');
@@ -503,65 +532,41 @@ if (document.readyState === 'complete') previewOnArrival();
 else window.addEventListener('load', previewOnArrival, { once: true });
 document.addEventListener('visibilitychange', previewOnArrival);
 
-// Event-driven cursor: CSS handles the short easing; no idle animation loop.
+// Native cursor remains responsive even when page animation is throttled.
 const cursorDevice = window.matchMedia('(hover: hover) and (pointer: fine)');
-const artCursor = document.createElement('div');
-artCursor.className = 'art-cursor';
-artCursor.setAttribute('aria-hidden', 'true');
-artCursor.innerHTML = '<span class="cursor-dot"></span><span class="cursor-ring"><span>Explore</span></span><span class="cursor-ripple"></span>';
-document.body.append(artCursor);
-const cursorDot = artCursor.querySelector('.cursor-dot');
-const cursorRing = artCursor.querySelector('.cursor-ring');
-const cursorRipple = artCursor.querySelector('.cursor-ripple');
-let cursorRippleAnimation;
-function hideArtCursor() {
-  document.documentElement.classList.remove('cursor-active', 'cursor-text');
-  artCursor.classList.remove('visible', 'pressed');
-  cursorRippleAnimation?.cancel();
+const exploreCursor = document.createElement('span');
+exploreCursor.className = 'explore-cursor';
+exploreCursor.textContent = 'Explore';
+exploreCursor.setAttribute('aria-hidden', 'true');
+document.body.append(exploreCursor);
+let exploreTarget = null;
+function hideExploreCursor() {
+  exploreTarget = null;
+  exploreCursor.classList.remove('visible');
 }
-function moveArtCursor(event) {
-  if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || document.hidden) {
-    hideArtCursor();
-    return;
+function positionExploreCursor(event) {
+  if (!exploreTarget || event.pointerType !== 'mouse') return;
+  const x = Math.max(4, Math.min(window.innerWidth - 76, event.clientX + 20));
+  const y = Math.max(4, Math.min(window.innerHeight - 76, event.clientY + 20));
+  exploreCursor.style.transform = `translate3d(${x}px,${y}px,0)`;
+}
+document.addEventListener('pointerover', event => {
+  if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || viewer.open) {
+    hideExploreCursor(); return;
   }
-  const target = event.target;
-  if (!(target instanceof Element)) return;
-  const nativeControl = target.closest('input,textarea,select,[contenteditable="true"]');
-  if (nativeControl) { hideArtCursor(); return; }
-  const eye = target.closest('.logo-eye');
-  const artwork = target.closest('[data-project]');
-  const clickable = target.closest('a,button,[role="button"]');
-
-  const mode = eye ? 'eye' : artwork ? 'explore' : clickable ? 'link' : 'default';
-  const host = target.closest('dialog[open]') || document.body;
-  if (artCursor.parentElement !== host) host.append(artCursor);
-  artCursor.dataset.mode = mode;
-  document.documentElement.classList.add('cursor-active');
-  document.documentElement.classList.remove('cursor-text');
-  artCursor.classList.add('visible');
-  const position = `${event.clientX}px ${event.clientY}px`;
-  cursorDot.style.translate = position;
-  cursorRing.style.translate = position;
-}
-window.addEventListener('pointermove', moveArtCursor, { passive: true });
-document.addEventListener('pointerover', moveArtCursor, { passive: true });
-document.addEventListener('pointerdown', event => {
-  moveArtCursor(event);
-  if (!artCursor.classList.contains('visible') || event.button !== 0) return;
-  artCursor.classList.add('pressed');
-  cursorRippleAnimation?.cancel();
-  cursorRipple.style.translate = `${event.clientX}px ${event.clientY}px`;
-  cursorRippleAnimation = cursorRipple.animate([
-    { transform: 'translate(-50%,-50%) scale(.5)', opacity: .6 },
-    { transform: 'translate(-50%,-50%) scale(2.2)', opacity: 0 }
-  ], { duration: 420, easing: 'ease-out' });
+  const target = event.target.closest('[data-project]');
+  if (target !== exploreTarget) {
+    exploreTarget = target;
+    exploreCursor.classList.toggle('visible', !!target);
+  }
+  positionExploreCursor(event);
 }, { passive: true });
-window.addEventListener('pointerup', () => artCursor.classList.remove('pressed'), { passive: true });
-window.addEventListener('pointercancel', hideArtCursor);
-document.addEventListener('pointerout', event => { if (!event.relatedTarget) hideArtCursor(); });
-window.addEventListener('blur', hideArtCursor);
-document.addEventListener('visibilitychange', hideArtCursor);
-document.addEventListener('keydown', event => { if (event.key === 'Tab' || event.key === 'Escape') hideArtCursor(); });
-document.addEventListener('close', hideArtCursor, true);
-cursorDevice.addEventListener('change', hideArtCursor);
-reducedMotion.addEventListener('change', hideArtCursor);
+window.addEventListener('pointermove', positionExploreCursor, { passive: true });
+document.addEventListener('pointerout', event => { if (!event.relatedTarget) hideExploreCursor(); });
+document.addEventListener('pointerdown', hideExploreCursor, { passive: true });
+window.addEventListener('scroll', hideExploreCursor, { passive: true });
+window.addEventListener('blur', hideExploreCursor);
+document.addEventListener('visibilitychange', hideExploreCursor);
+document.addEventListener('keydown', hideExploreCursor);
+cursorDevice.addEventListener('change', hideExploreCursor);
+reducedMotion.addEventListener('change', hideExploreCursor);
