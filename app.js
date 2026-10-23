@@ -414,7 +414,7 @@ const brandSatellites = [...document.querySelectorAll('.brand-satellite')];
 // Four concave sides, joined by rounded paths around the sharp tips.
 // Arc-length parameterization keeps the speed even without measuring the DOM.
 function brandContourPoint(progress) {
-  const gap = .38;
+  const gap = .30;
   const phase = ((progress % 4) + 4) % 4;
   const quadrant = Math.floor(phase);
   const distance = (phase - quadrant) * (1 + gap);
@@ -435,8 +435,43 @@ function brandContourPoint(progress) {
   const turn = quadrant * Math.PI / 2;
   return { x: x * Math.cos(turn) - y * Math.sin(turn), y: x * Math.sin(turn) + y * Math.cos(turn) };
 }
+let brandEdgeOffset = 0;
+let brandEdgeFrame = 0;
+let brandScrollLimit = 0;
+let brandTouchY = null;
+function advanceBrandAtEdge(delta) {
+  if (!delta || reducedMotion.matches || document.hidden || document.body.classList.contains('modal-open')) return;
+  const position = Math.max(0, Math.min(brandScrollLimit, window.scrollY));
+  if (!((delta < 0 && position <= 1) || (delta > 0 && position >= brandScrollLimit - 1))) return;
+  brandEdgeOffset = (brandEdgeOffset + Math.max(-160, Math.min(160, delta))) % 1520;
+  if (!brandEdgeFrame) brandEdgeFrame = requestAnimationFrame(() => {
+    brandEdgeFrame = 0;
+    updateBrandOrbit(Math.max(0, Math.min(brandScrollLimit, window.scrollY)));
+  });
+}
+window.addEventListener('wheel', event => {
+  if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+  const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
+  advanceBrandAtEdge(event.deltaY * unit);
+}, { passive: true });
+window.addEventListener('touchstart', event => {
+  brandTouchY = event.touches.length === 1 ? event.touches[0].clientY : null;
+}, { passive: true });
+window.addEventListener('touchmove', event => {
+  if (event.touches.length !== 1) { brandTouchY = null; return; }
+  const nextY = event.touches[0].clientY;
+  if (brandTouchY !== null) advanceBrandAtEdge(brandTouchY - nextY);
+  brandTouchY = nextY;
+}, { passive: true });
+window.addEventListener('touchend', () => { brandTouchY = null; }, { passive: true });
+window.addEventListener('touchcancel', () => { brandTouchY = null; }, { passive: true });
+window.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || event.target.closest('input,textarea,select,button,a,[contenteditable],[role="group"]')) return;
+  const delta = event.key === 'ArrowDown' ? 40 : event.key === 'ArrowUp' ? -40 : event.key === 'PageDown' ? window.innerHeight * .8 : event.key === 'PageUp' ? -window.innerHeight * .8 : event.key === ' ' ? (event.shiftKey ? -1 : 1) * window.innerHeight * .8 : 0;
+  advanceBrandAtEdge(delta);
+});
 function updateBrandOrbit(scroll) {
-  const { x, y } = brandContourPoint(reducedMotion.matches ? .5 : .5 + scroll / 380);
+  const { x, y } = brandContourPoint(reducedMotion.matches ? .5 : .5 + (scroll + brandEdgeOffset) / 380);
   brandSatellites.forEach(satellite => {
     satellite.style.transform = `translate3d(calc(var(--brand-radius) * ${x}),calc(var(--brand-radius) * ${y}),0)`;
   });
@@ -444,8 +479,9 @@ function updateBrandOrbit(scroll) {
 function updateScrollScene() {
   scrollFrame = 0;
   const scroll = window.scrollY;
-  updateBrandOrbit(scroll);
   const total = document.documentElement.scrollHeight - window.innerHeight;
+  brandScrollLimit = Math.max(0, total);
+  updateBrandOrbit(Math.max(0, Math.min(brandScrollLimit, scroll)));
   const heroRect = hero.getBoundingClientRect();
   const aboutRect = about.getBoundingClientRect();
   const workTop = document.querySelector('#work').getBoundingClientRect().top;

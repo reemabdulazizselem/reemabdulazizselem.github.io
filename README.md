@@ -40,4 +40,8 @@ The cursor is a native SVG cursor on fine-pointer devices, with a decorative Exp
 
 Gallery images use 480/960-pixel variants and intrinsic dimensions. The entrance wave uses a 91–251 KB sketch preview while the full comparison retains the original high-resolution files. Fonts are linked from the HTML with preconnects. Mobile filters are at least 44 px high, and individual eye hit areas are at least 24 × 28 px without enlarging the letter artwork.
 
-The header, footer, and Behind the work section use the supplied blue logo with a yellow satellite. The satellite follows the four concave sides and rounds the tips without spinning. Its position uses inexpensive arc calculations in the existing scroll frame, reverses with scrolling, and remains still with reduced motion enabled. There is no idle animation loop or extra scroll listener.
+The header, footer, and Behind the work section use the supplied blue logo with a yellow satellite. The satellite follows the four concave sides and rounds the tips without spinning. Its position uses inexpensive arc calculations in the existing scroll frame, reverses with scrolling, and remains still with reduced motion enabled. There is no idle animation loop.
+
+The yellow mark now follows a closer contour. At either page boundary, continued wheel, trackpad, single-finger touch, or scroll-key input advances the logo without preventing native scrolling. Edge updates are coalesced into one requested frame, stop when input stops, and are disabled for reduced motion and open dialogs.
+
+The hero, header, footer, and About logos share the contour motion. The sliding ribbon and artwork badges use static blue-and-yellow marks.
