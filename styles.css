@@ -98,3 +98,11 @@ input,select,textarea,[contenteditable="true"]{cursor:auto}
 .brand-satellite img{width:14px;height:14px;max-width:none}
 @media(max-width:600px){.wordmark .brand-orbit{width:54px;height:54px;margin-left:3px}.brand-orbit .brand-blue{width:38px;height:38px;left:8px;top:8px}.wordmark .brand-satellite{left:20px;top:20px}}
 @media(max-width:360px){.wordmark{font-size:26px}.header nav{font-size:11px;gap:9px}.header nav a{white-space:nowrap}}
+
+/* The yellow mark follows the concave outline and keeps its orientation. */
+.brand-orbit{--brand-radius:22px}
+.about-symbol.brand-orbit{--brand-radius:80px;position:relative;width:270px;height:270px;justify-self:center;transform:none!important;font-size:0}
+.about-symbol.brand-orbit .brand-blue{position:absolute;width:160px;height:160px;left:55px;top:55px}
+.about-symbol.brand-orbit .brand-satellite{position:absolute;width:40px;height:40px;left:115px;top:115px;display:block;transform:translate3d(55px,-55px,0)}
+.about-symbol.brand-orbit .brand-satellite img{width:40px;height:40px}
+@media(max-width:600px){.brand-orbit{--brand-radius:19px}.about-symbol.brand-orbit{--brand-radius:36px;width:124px;height:124px;justify-self:start}.about-symbol.brand-orbit .brand-blue{width:72px;height:72px;left:26px;top:26px}.about-symbol.brand-orbit .brand-satellite{width:20px;height:20px;left:52px;top:52px}.about-symbol.brand-orbit .brand-satellite img{width:20px;height:20px}}

@@ -411,15 +411,34 @@ document.addEventListener('focusin', event => {
 });
 
 const brandSatellites = [...document.querySelectorAll('.brand-satellite')];
+// Four concave sides, joined by rounded paths around the sharp tips.
+// Arc-length parameterization keeps the speed even without measuring the DOM.
+function brandContourPoint(progress) {
+  const gap = .38;
+  const phase = ((progress % 4) + 4) % 4;
+  const quadrant = Math.floor(phase);
+  const distance = (phase - quadrant) * (1 + gap);
+  let x, y, angle;
+  if (distance < gap) {
+    angle = -Math.PI / 2 + distance / gap * Math.PI / 2;
+    x = gap * Math.cos(angle);
+    y = -1 + gap * Math.sin(angle);
+  } else if (distance < 1) {
+    angle = (distance - gap) / (1 - gap) * Math.PI / 2;
+    x = 1 - (1 - gap) * Math.cos(angle);
+    y = -1 + (1 - gap) * Math.sin(angle);
+  } else {
+    angle = -Math.PI / 2 + (distance - 1) / gap * Math.PI / 2;
+    x = 1 + gap * Math.cos(angle);
+    y = gap * Math.sin(angle);
+  }
+  const turn = quadrant * Math.PI / 2;
+  return { x: x * Math.cos(turn) - y * Math.sin(turn), y: x * Math.sin(turn) + y * Math.cos(turn) };
+}
 function updateBrandOrbit(scroll) {
-  // Share the existing scroll frame; no timer or animation loop while idle.
-  const angle = -Math.PI / 4 + (reducedMotion.matches ? 0 : scroll / 240);
-  const radius = window.innerWidth <= 600 ? 23 : 28;
-  const x = Math.cos(angle) * radius;
-  const y = Math.sin(angle) * radius;
-  const spin = reducedMotion.matches ? 0 : scroll * .7;
+  const { x, y } = brandContourPoint(reducedMotion.matches ? .5 : .5 + scroll / 380);
   brandSatellites.forEach(satellite => {
-    satellite.style.transform = `translate3d(${x}px,${y}px,0) rotate(${spin}deg)`;
+    satellite.style.transform = `translate3d(calc(var(--brand-radius) * ${x}),calc(var(--brand-radius) * ${y}),0)`;
   });
 }
 function updateScrollScene() {
