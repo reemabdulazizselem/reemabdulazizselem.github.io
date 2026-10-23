@@ -410,9 +410,22 @@ document.addEventListener('focusin', event => {
   if (element) revealItem(element);
 });
 
+const brandSatellites = [...document.querySelectorAll('.brand-satellite')];
+function updateBrandOrbit(scroll) {
+  // Share the existing scroll frame; no timer or animation loop while idle.
+  const angle = -Math.PI / 4 + (reducedMotion.matches ? 0 : scroll / 240);
+  const radius = window.innerWidth <= 600 ? 23 : 28;
+  const x = Math.cos(angle) * radius;
+  const y = Math.sin(angle) * radius;
+  const spin = reducedMotion.matches ? 0 : scroll * .7;
+  brandSatellites.forEach(satellite => {
+    satellite.style.transform = `translate3d(${x}px,${y}px,0) rotate(${spin}deg)`;
+  });
+}
 function updateScrollScene() {
   scrollFrame = 0;
   const scroll = window.scrollY;
+  updateBrandOrbit(scroll);
   const total = document.documentElement.scrollHeight - window.innerHeight;
   const heroRect = hero.getBoundingClientRect();
   const aboutRect = about.getBoundingClientRect();

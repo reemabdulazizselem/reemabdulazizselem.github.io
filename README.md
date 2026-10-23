@@ -39,3 +39,5 @@ The supplied original PNGs are unchanged in the parent folders. The two backgrou
 The cursor is a native SVG cursor on fine-pointer devices, with a decorative Explore badge over artwork. It does not replace the pointer with a DOM animation. Reduced-motion and touch devices retain standard behavior. The water comparison stops scheduling frames once movement, fade, and the trail settle; reduced-motion interactions draw one frame per update. Eye geometry is cached between layout/scroll changes and offscreen pupils are skipped.
 
 Gallery images use 480/960-pixel variants and intrinsic dimensions. The entrance wave uses a 91–251 KB sketch preview while the full comparison retains the original high-resolution files. Fonts are linked from the HTML with preconnects. Mobile filters are at least 44 px high, and individual eye hit areas are at least 24 × 28 px without enlarging the letter artwork.
+
+The header and footer use the supplied blue logo with a yellow satellite. The satellite orbits and rotates with scrolling through the existing scroll frame, reverses when scrolling up, and remains still with reduced motion enabled. There is no idle animation loop.

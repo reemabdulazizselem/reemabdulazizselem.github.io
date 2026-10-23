@@ -89,3 +89,12 @@ a,a *,button,button *{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A
 .eye-hitbox,.eye-hitbox *{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2218%22%20height%3D%2218%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%229%22%20r%3D%226%22%20fill%3D%22%23e46640%22%20stroke%3D%22%23f6f3eb%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%229%22%20cy%3D%229%22%20r%3D%222%22%20fill%3D%22%23252b27%22/%3E%3C/svg%3E") 9 9,pointer}
 input,select,textarea,[contenteditable="true"]{cursor:auto}
 }
+
+/* Scroll-driven logo: transforms only, with no perpetual animation. */
+.wordmark-eyes{align-items:center}
+.wordmark .brand-orbit{position:relative;display:inline-block;flex:none;width:64px;height:64px;margin:0 0 0 9px;font-size:0;vertical-align:middle;isolation:isolate}
+.brand-orbit .brand-blue{position:absolute;width:44px;height:44px;left:10px;top:10px}
+.wordmark .brand-satellite{position:absolute;display:block;width:14px;height:14px;left:25px;top:25px;margin:0;font-size:0;transform:translate3d(20px,-20px,0)}
+.brand-satellite img{width:14px;height:14px;max-width:none}
+@media(max-width:600px){.wordmark .brand-orbit{width:54px;height:54px;margin-left:3px}.brand-orbit .brand-blue{width:38px;height:38px;left:8px;top:8px}.wordmark .brand-satellite{left:20px;top:20px}}
+@media(max-width:360px){.wordmark{font-size:26px}.header nav{font-size:11px;gap:9px}.header nav a{white-space:nowrap}}
