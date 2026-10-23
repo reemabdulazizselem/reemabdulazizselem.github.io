@@ -36,7 +36,7 @@ The supplied original PNGs are unchanged in the parent folders. The two backgrou
 
 ## Performance and responsive behavior
 
-The cursor is a native SVG cursor on fine-pointer devices, with a decorative Explore badge over artwork. It does not replace the pointer with a DOM animation. Reduced-motion and touch devices retain standard behavior. The water comparison stops scheduling frames once movement, fade, and the trail settle; reduced-motion interactions draw one frame per update. Eye geometry is cached between layout/scroll changes and offscreen pupils are skipped.
+The cursor uses the standard system arrow and hand, with a decorative Explore badge over artwork. It does not replace the pointer with a DOM animation. Reduced-motion and touch devices retain standard behavior. The water comparison stops scheduling frames once movement, fade, and the trail settle; reduced-motion interactions draw one frame per update. Eye geometry is cached between layout/scroll changes and offscreen pupils are skipped.
 
 Gallery images use 480/960-pixel variants and intrinsic dimensions. The entrance wave uses a 91–251 KB sketch preview while the full comparison retains the original high-resolution files. Fonts are linked from the HTML with preconnects. Mobile filters are at least 44 px high, and individual eye hit areas are at least 24 × 28 px without enlarging the letter artwork.
 
@@ -45,3 +45,5 @@ The header, footer, and Behind the work section use the supplied blue logo with 
 The yellow mark now follows a closer contour. At either page boundary, continued wheel, trackpad, single-finger touch, or scroll-key input advances the logo without preventing native scrolling. Edge updates are coalesced into one requested frame, stop when input stops, and are disabled for reduced motion and open dialogs.
 
 The hero, header, footer, and About logos share the contour motion. The sliding ribbon and artwork badges use static blue-and-yellow marks.
+
+Palette: warm ivory #F7F5EE, navy #131943, soft yellow #F4DC55, slate #53586B, and pale beige #DFDED5. Artwork panels use ivory and pale blue.
