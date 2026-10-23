@@ -121,3 +121,6 @@ input,select,textarea,[contenteditable="true"]{cursor:auto}
 button:focus-visible,a:focus-visible,input:focus-visible,.art-stage:focus-visible{outline-color:var(--blue)}
 .viewer-controls input{accent-color:var(--blue)}
 .explore-cursor{width:60px;height:60px;background:var(--blue);color:var(--paper);border-color:var(--yellow)}
+
+/* Golden yellow keeps emphasized words readable on ivory. */
+em{color:#9a7300}
