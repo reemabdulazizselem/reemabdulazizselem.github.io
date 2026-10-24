@@ -144,3 +144,7 @@ nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current=
 .expressive-wordmark .wordmark-m{font-size:83px}.expressive-wordmark .wordmark-s{font-size:91px}
 footer .wordmark .expressive-wordmark{width:128px;height:85px}
 @media(max-width:600px){.wordmark .expressive-wordmark{width:96px;height:64px}footer .wordmark .expressive-wordmark{width:105px;height:70px}}
+
+/* Finished-only artwork does not need a reveal canvas or touch capture. */
+.artwork-only-viewer .viewer-controls,.artwork-only .water-reveal,.artwork-only #sketch-image,.artwork-only .stage-label{display:none}
+.art-stage.artwork-only{touch-action:auto;cursor:auto}

@@ -22,3 +22,5 @@ Edit the HTML pages directly; shared behavior is in `app.js`, styling in `styles
 
 The original single-page site is preserved by Git tag `single-page-checkpoint-2026-10-24`, commit `21d3dbfa4cd2fb35baa9b00e7768a7f01ae3a933`. Restore that tag’s files in a new commit to return to the previous version.
 
+
+Four more backgrounds: garden house, cat market (with sketches), little shop and traveling home (artwork only). New project pages: project-manor.html, project-market.html, project-shop.html, project-journey.html. Artwork-only popups omit sketch assets and animation.

@@ -2,7 +2,11 @@ const projects = {
   ouroboros: { title: 'Frankenstein Ouroboros', category: 'Illustration', prefix: 'ouroboros', width: 1357, height: 1800 },
   behar: { title: 'Behar', category: 'Graphic design · Book cover', prefix: 'behar', width: 1268, height: 1800 },
   studio: { title: 'The sunlit studio', category: 'Background art', prefix: 'studio', width: 1800, height: 950 },
-  room: { title: 'A room of stories', category: 'Background art', prefix: 'room', width: 1800, height: 967 }
+  room: { title: 'A room of stories', category: 'Background art', prefix: 'room', width: 1800, height: 967 } ,
+  manor: {"title": "The garden house", "category": "Background art", "prefix": "manor", "width": 1800, "height": 949, "hasSketch": true},
+  market: {"title": "The cat market", "category": "Background art", "prefix": "market", "width": 1800, "height": 1010, "hasSketch": true},
+  shop: {"title": "Inside the little shop", "category": "Background art", "prefix": "shop", "width": 1800, "height": 938, "hasSketch": false},
+  journey: {"title": "A home on the move", "category": "Background art", "prefix": "journey", "width": 1547, "height": 1800, "hasSketch": false}
 };
 const viewer = document.querySelector('#viewer');
 const stage = document.querySelector('#art-stage');
@@ -242,7 +246,7 @@ function clearWater() {
 }
 function animateWater(now) {
   waterFrame = 0;
-  if (document.hidden || !viewer.open || stage.classList.contains('full-sketch')) { clearWater(); return; }
+  if (stage.classList.contains('artwork-only') || document.hidden || !viewer.open || stage.classList.contains('full-sketch')) { clearWater(); return; }
   const active = stage.classList.contains('revealing');
   const dt = Math.min(40, now - (lastFrame || now - 16));
   lastFrame = now;
@@ -293,7 +297,7 @@ function animateWater(now) {
   else lastFrame = 0; // Keep the settled mask without drawing more frames.
 }
 function startWater() {
-  if (!document.hidden && !waterFrame && viewer.open && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
+  if (!stage.classList.contains('artwork-only') && !document.hidden && !waterFrame && viewer.open && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
 }
 sketch.addEventListener('load', startWater);
 reducedMotion.addEventListener('change', () => { clearWater(); startWater(); });
@@ -321,7 +325,15 @@ document.querySelectorAll('[data-project]').forEach(button => {
     final.height = project.height;
     final.src = `assets/${project.prefix}-final.webp`;
     final.alt = `${project.title} — finished artwork`;
-    document.querySelector('#sketch-image').src = `assets/${project.prefix}-sketch.webp`;
+    const hasSketch = project.hasSketch !== false;
+    stage.classList.toggle('artwork-only', !hasSketch);
+    viewer.classList.toggle('artwork-only-viewer', !hasSketch);
+    if (hasSketch) sketch.src = `assets/${project.prefix}-sketch.webp`;
+    else sketch.removeAttribute('src');
+    stage.tabIndex = hasSketch ? 0 : -1;
+    stage.setAttribute('aria-label', hasSketch ? 'Artwork comparison. Use arrow keys to move the sketch lens.' : 'Finished artwork');
+    document.querySelector('#viewer-help').textContent = hasSketch ? 'Move your cursor over the artwork to reveal the sketch beneath. On a touch screen, drag your finger across it.' : 'A closer look at the finished artwork.';
+    document.querySelector('.keyboard-hint').textContent = hasSketch ? 'Keyboard: focus the artwork and use arrow keys · Escape to close' : 'Escape to close';
     document.querySelector('#book-preview').hidden = button.dataset.project !== 'behar';
     stage.classList.remove('revealing');
     clearWater();
@@ -344,12 +356,14 @@ viewer.addEventListener('close', () => {
   opener?.focus();
 });
 function revealAt(event) {
+  if (stage.classList.contains('artwork-only')) return;
   const rect = stage.getBoundingClientRect();
   setPosition((event.clientX - rect.left) / rect.width * 100, (event.clientY - rect.top) / rect.height * 100);
   stage.classList.add('revealing');
 }
 stage.addEventListener('pointermove', revealAt);
 stage.addEventListener('pointerdown', event => {
+  if (stage.classList.contains('artwork-only')) return;
   revealAt(event);
   stage.setPointerCapture(event.pointerId);
 });
@@ -362,6 +376,7 @@ stage.addEventListener('pointerleave', () => stage.classList.remove('revealing')
 stage.addEventListener('focus', () => stage.classList.add('revealing'));
 stage.addEventListener('blur', () => stage.classList.remove('revealing'));
 stage.addEventListener('keydown', event => {
+  if (stage.classList.contains('artwork-only')) return;
   const moves = { ArrowLeft: [-3, 0], ArrowRight: [3, 0], ArrowUp: [0, -3], ArrowDown: [0, 3] };
   if (!moves[event.key]) return;
   event.preventDefault();
