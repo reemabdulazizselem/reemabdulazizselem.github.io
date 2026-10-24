@@ -136,3 +136,11 @@ nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current=
 .project-feature{position:relative;display:block;width:100%;padding:36px;background:#e9ecf4}.project-feature>img{width:auto;height:auto;max-height:78vh;margin:auto}.project-feature .reveal-tag{color:var(--ink)}.project-feature:hover .reveal-tag{background:var(--yellow)}.project-context{margin:55px auto;max-width:900px}.project-next{margin-top:65px;padding-top:30px;border-top:1px solid var(--line)}.project-next .eyebrow{margin-bottom:12px}.project-next>a{font-size:clamp(26px,3vw,42px);letter-spacing:-1px}.project-next>a span{margin-left:20px}.pill:hover{color:var(--ink)}
 @media(max-width:600px){.header{height:auto;min-height:114px;flex-wrap:wrap;gap:0;padding-top:8px;padding-bottom:8px}.header nav{width:100%;justify-content:space-between;gap:12px}.header nav a{min-height:36px}.header>.wordmark{margin:auto}.contact-page{grid-template-columns:1fr;padding-block:48px;gap:35px;min-height:0}.contact-page .about-symbol{justify-self:start}.project-heading{padding-top:30px}.project-heading h1{font-size:44px;overflow-wrap:break-word}.project-feature{padding:20px 14px 55px}.project-feature>img{max-height:65vh}.project-feature .reveal-tag{font-size:9px;bottom:14px;left:14px}.page-about .about h1{font-size:42px}.home-work .section-heading .text-link{margin-top:16px}.project-next{margin-top:40px}}
 .header nav a[aria-current="page"]{text-decoration:none}.header nav a::after{bottom:2px;background:#9a7300}
+
+/* Stacked expressive signature; the two interactive e letters vary by placement. */
+.wordmark .expressive-wordmark{display:block;width:113px;height:75px;overflow:visible;color:var(--ink);flex:none}
+.expressive-wordmark .logo-eye,.expressive-wordmark .wordmark-e{width:48px;height:52px;margin:0;overflow:visible}
+.expressive-wordmark text{font-family:Arial,Helvetica,sans-serif;font-weight:700;fill:currentColor;letter-spacing:-5px}
+.expressive-wordmark .wordmark-m{font-size:83px}.expressive-wordmark .wordmark-s{font-size:91px}
+footer .wordmark .expressive-wordmark{width:128px;height:85px}
+@media(max-width:600px){.wordmark .expressive-wordmark{width:96px;height:64px}footer .wordmark .expressive-wordmark{width:105px;height:70px}}
