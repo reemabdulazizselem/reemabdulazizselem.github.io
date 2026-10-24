@@ -430,10 +430,20 @@ document.addEventListener('focusin', event => {
 });
 
 const brandSatellites = [...document.querySelectorAll('.brand-satellite')];
+const brandClearances = new Map();
+function measureBrandClearances() {
+  brandSatellites.forEach(satellite => {
+    const radius = parseFloat(getComputedStyle(satellite.parentElement).getPropertyValue('--brand-radius'));
+    const halfSize = satellite.offsetWidth / 2;
+    // The yellow shape fits inside this circle. Keep its edge 2px clear.
+    brandClearances.set(satellite, (halfSize + 2) / radius);
+  });
+}
+measureBrandClearances();
+window.addEventListener('resize', measureBrandClearances);
 // Four concave sides, joined by rounded paths around the sharp tips.
 // Arc-length parameterization keeps the speed even without measuring the DOM.
-function brandContourPoint(progress) {
-  const gap = .18;
+function brandContourPoint(progress, gap = .4) {
   const phase = ((progress % 4) + 4) % 4;
   const quadrant = Math.floor(phase);
   const distance = (phase - quadrant) * (1 + gap);
@@ -490,8 +500,9 @@ window.addEventListener('keydown', event => {
   advanceBrandAtEdge(delta);
 });
 function updateBrandOrbit(scroll) {
-  const { x, y } = brandContourPoint(reducedMotion.matches ? .5 : .5 + (scroll + brandEdgeOffset) / 380);
+  const progress = reducedMotion.matches ? .5 : .5 + (scroll + brandEdgeOffset) / 380;
   brandSatellites.forEach(satellite => {
+    const { x, y } = brandContourPoint(progress, brandClearances.get(satellite));
     satellite.style.transform = `translate3d(calc(var(--brand-radius) * ${x}),calc(var(--brand-radius) * ${y}),0)`;
   });
 }
