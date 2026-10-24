@@ -24,7 +24,7 @@ May your life be filled with joy, laughter, and success. May your inner light ke
 
 Always believe in yourself and in what you can create. Above all, I hope you see in yourself the same beauty you bring into the world.`;
 const eyeClicks = new Map();
-const eyeStorageKey = 'reem-eye-challenge-v1';
+const eyeStorageKey = 'reem-eye-challenge-v2';
 const eyeIdentities = new Set(['eye-left','eye-right','about-eye-left','about-eye-right','footer-eye-left','footer-eye-right']);
 const eyeWindowMs = 30_000;
 let eyeWindowStarted = null;
@@ -72,7 +72,8 @@ function revealDedication() {
 logoEyes.forEach(eye => (eye.parentElement?.classList?.contains('eye-hitbox') ? eye.parentElement : eye).addEventListener('click', event => {
   event.preventDefault(); // Clicking an eye must not follow the logo's home link.
   const now = Date.now();
-  const identity = eye.querySelector('clipPath').id;
+  const identity = eye.dataset.eyeId;
+  if (!eyeIdentities.has(identity)) return;
   if (eyeWindowStarted === null || now - eyeWindowStarted > eyeWindowMs) {
     eyeClicks.clear();
     eyeWindowStarted = now;
