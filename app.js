@@ -24,10 +24,26 @@ May your life be filled with joy, laughter, and success. May your inner light ke
 
 Always believe in yourself and in what you can create. Above all, I hope you see in yourself the same beauty you bring into the world.`;
 const eyeClicks = new Map();
+const eyeStorageKey = 'reem-eye-challenge-v1';
+const eyeIdentities = new Set(['eye-left','eye-right','about-eye-left','about-eye-right','footer-eye-left','footer-eye-right']);
 const eyeWindowMs = 30_000;
 let eyeWindowStarted = null;
 let eyeAttemptInvalid = false;
 let dedicationDialog;
+try {
+  const saved = JSON.parse(sessionStorage.getItem(eyeStorageKey));
+  if (saved && Number.isFinite(saved.started) && Date.now() >= saved.started && Date.now() - saved.started <= eyeWindowMs && Array.isArray(saved.eyes)) {
+    eyeWindowStarted = saved.started;
+    eyeAttemptInvalid = saved.invalid === true;
+    saved.eyes.filter(id => eyeIdentities.has(id)).forEach(id => eyeClicks.set(id, saved.started));
+  }
+} catch { /* Storage can be unavailable in private browsing. */ }
+function saveEyeAttempt() {
+  try {
+    if (eyeWindowStarted === null) sessionStorage.removeItem(eyeStorageKey);
+    else sessionStorage.setItem(eyeStorageKey, JSON.stringify({started:eyeWindowStarted, invalid:eyeAttemptInvalid, eyes:[...eyeClicks.keys()]}));
+  } catch { /* The six-eye challenge still works on the About page. */ }
+}
 
 function revealDedication() {
   if (!dedicationMessage.trim()) return;
@@ -55,18 +71,21 @@ function revealDedication() {
 // Checked only on clicks; the challenge needs no background timer.
 logoEyes.forEach(eye => (eye.parentElement?.classList?.contains('eye-hitbox') ? eye.parentElement : eye).addEventListener('click', event => {
   event.preventDefault(); // Clicking an eye must not follow the logo's home link.
-  const now = performance.now();
+  const now = Date.now();
+  const identity = eye.querySelector('clipPath').id;
   if (eyeWindowStarted === null || now - eyeWindowStarted > eyeWindowMs) {
     eyeClicks.clear();
     eyeWindowStarted = now;
     eyeAttemptInvalid = false;
   }
-  if (eyeClicks.has(eye)) eyeAttemptInvalid = true;
-  if (eyeAttemptInvalid) return;
-  eyeClicks.set(eye, now);
-  if (eyeClicks.size === logoEyes.length && logoEyes.length === 6) {
+  if (eyeClicks.has(identity)) eyeAttemptInvalid = true;
+  if (eyeAttemptInvalid) { saveEyeAttempt(); return; }
+  eyeClicks.set(identity, now);
+  saveEyeAttempt();
+  if (eyeClicks.size === eyeIdentities.size) {
     eyeClicks.clear(); // Closing the note requires a fresh complete set to reopen.
     eyeWindowStarted = null;
+    saveEyeAttempt();
     revealDedication();
   }
 }));
@@ -381,9 +400,9 @@ const tickerTrack = document.createElement('div');
 tickerTrack.className = 'ticker-track';
 const tickerGroup = document.createElement('div');
 tickerGroup.className = 'ticker-group';
-while (ticker.firstChild) tickerGroup.append(ticker.firstChild);
+while (ticker?.firstChild) tickerGroup.append(ticker.firstChild);
 tickerTrack.append(tickerGroup, tickerGroup.cloneNode(true), tickerGroup.cloneNode(true));
-ticker.append(tickerTrack);
+ticker?.append(tickerTrack);
 let scrollFrame = 0;
 const revealItems = [...document.querySelectorAll('.hero-copy > *, .section-heading, .filters, .project, .about > div:last-child')];
 let revealObserver;
@@ -482,26 +501,21 @@ function updateScrollScene() {
   const total = document.documentElement.scrollHeight - window.innerHeight;
   brandScrollLimit = Math.max(0, total);
   updateBrandOrbit(Math.max(0, Math.min(brandScrollLimit, scroll)));
-  const heroRect = hero.getBoundingClientRect();
-  const aboutRect = about.getBoundingClientRect();
-  const workTop = document.querySelector('#work').getBoundingClientRect().top;
+  const heroRect = (hero?.getBoundingClientRect() || {top:0,height:1});
+  const aboutRect = (about?.getBoundingClientRect() || {top:0,height:1});
   const groupWidth = tickerGroup.getBoundingClientRect().width;
   const motion = reducedMotion.matches ? 0 : (window.innerWidth <= 600 ? .55 : 1);
   const heroProgress = Math.min(1, Math.max(0, -heroRect.top / heroRect.height));
   const aboutProgress = Math.min(1, Math.max(0, (window.innerHeight - aboutRect.top) / (window.innerHeight + aboutRect.height)));
   header.classList.toggle('scrolled', scroll > 24);
   header.style.setProperty('--scroll-progress', String(total > 0 ? Math.min(1, scroll / total) : 0));
-  heroArt.style.setProperty('--hero-drift', `${heroProgress * 85 * motion}px`);
-  heroArt.style.setProperty('--hero-turn', `${heroProgress * -8 * motion}deg`);
-  heroArt.style.setProperty('--star-turn', `${heroProgress * 95 * motion}deg`);
-  heroArt.style.setProperty('--stamp-drift', `${heroProgress * -45 * motion}px`);
-  about.style.setProperty('--about-turn', `${(aboutProgress - .5) * 110 * motion}deg`);
+  heroArt?.style.setProperty('--hero-drift', `${heroProgress * 85 * motion}px`);
+  heroArt?.style.setProperty('--hero-turn', `${heroProgress * -8 * motion}deg`);
+  heroArt?.style.setProperty('--star-turn', `${heroProgress * 95 * motion}deg`);
+  heroArt?.style.setProperty('--stamp-drift', `${heroProgress * -45 * motion}px`);
+  about?.style.setProperty('--about-turn', `${(aboutProgress - .5) * 110 * motion}deg`);
   tickerTrack.style.transform = `translate3d(${-((scroll * .22 * motion) % (groupWidth || 1))}px,0,0)`;
-  const activeSection = aboutRect.top < window.innerHeight * .48 ? '#about' : workTop < window.innerHeight * .55 ? '#work' : '';
-  header.querySelectorAll('nav a').forEach(link => {
-    if (link.getAttribute('href') === activeSection) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
-  });
+
 }
 function scheduleScrollScene() {
   if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollScene);
@@ -573,15 +587,15 @@ function stopFeaturedPreview() {
   featuredWave = null;
   if (featuredSketch) featuredSketch.style.clipPath = 'inset(0 100% 0 0)';
 }
-featuredArt.addEventListener('pointerenter', event => {
+featuredArt?.addEventListener('pointerenter', event => {
   if (event.pointerType !== 'touch') previewFeaturedSketch();
 });
-featuredArt.addEventListener('pointerleave', stopFeaturedPreview);
-featuredArt.addEventListener('focus', () => {
+featuredArt?.addEventListener('pointerleave', stopFeaturedPreview);
+featuredArt?.addEventListener('focus', () => {
   if (featuredArt.matches(':focus-visible')) previewFeaturedSketch();
 });
-featuredArt.addEventListener('blur', stopFeaturedPreview);
-featuredArt.addEventListener('click', stopFeaturedPreview);
+featuredArt?.addEventListener('blur', stopFeaturedPreview);
+featuredArt?.addEventListener('click', stopFeaturedPreview);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopFeaturedPreview();
 });
@@ -590,7 +604,7 @@ reducedMotion.addEventListener('change', stopFeaturedPreview);
 // One entrance preview after the final artwork is ready; never a repeating loop.
 let introWavePending = true;
 async function previewOnArrival() {
-  if (!introWavePending || document.hidden) return;
+  if (!featuredArt || !introWavePending || document.hidden) return;
   introWavePending = false;
   if (reducedMotion.matches) return;
   try { await featuredArt.querySelector('img').decode(); } catch { return; }
@@ -622,7 +636,7 @@ document.addEventListener('pointerover', event => {
   if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || viewer.open) {
     hideExploreCursor(); return;
   }
-  const target = event.target.closest('[data-project]');
+  const target = event.target.closest('[data-project], [data-project-link]');
   if (target !== exploreTarget) {
     exploreTarget = target;
     exploreCursor.classList.toggle('visible', !!target);

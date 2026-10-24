@@ -124,3 +124,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,.art-stage:focus-visibl
 
 /* Golden yellow keeps emphasized words readable on ivory. */
 em{color:#9a7300}
+
+/* Separate pages share the same visual language and interaction layer. */
+nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current="page"]{text-decoration:underline;text-decoration-color:#9a7300;text-underline-offset:8px}
+.text-link{display:inline-block;padding:12px 0;font-size:13px;border-bottom:1px solid var(--ink)}
+.home-work .gallery{margin-top:36px}.home-work .landscape{align-self:center}.home-work .offset{padding-top:0}
+.page-work .section-heading h1{margin-bottom:0;font-size:clamp(48px,5.7vw,76px)}
+.page-about .about{min-height:70vh;align-items:center;border-top:0}.page-about .about h1{font-size:clamp(44px,4.6vw,68px);letter-spacing:-2px}
+.contact-page{min-height:72vh;display:grid;grid-template-columns:1.7fr 1fr;align-items:center;gap:7%;padding-block:85px}.contact-page h1{font-size:clamp(48px,5.5vw,78px)}.contact-email{display:inline-block;font-size:clamp(16px,2vw,26px);border-bottom:1px solid var(--ink);padding:18px 0;overflow-wrap:anywhere}.contact-email span{margin-left:12px}.contact-page .about-symbol{justify-self:center}
+.project-page{padding-top:35px;padding-bottom:70px}.project-heading{max-width:850px;padding-block:48px 35px}.project-heading h1{font-size:clamp(44px,5.6vw,76px)}.project-heading .intro{max-width:580px}.comparison-note{font-size:13px;line-height:1.7;color:var(--muted)}
+.project-feature{position:relative;display:block;width:100%;padding:36px;background:#e9ecf4}.project-feature>img{width:auto;height:auto;max-height:78vh;margin:auto}.project-feature .reveal-tag{color:var(--ink)}.project-feature:hover .reveal-tag{background:var(--yellow)}.project-context{margin:55px auto;max-width:900px}.project-next{margin-top:65px;padding-top:30px;border-top:1px solid var(--line)}.project-next .eyebrow{margin-bottom:12px}.project-next>a{font-size:clamp(26px,3vw,42px);letter-spacing:-1px}.project-next>a span{margin-left:20px}.pill:hover{color:var(--ink)}
+@media(max-width:600px){.header{height:auto;min-height:114px;flex-wrap:wrap;gap:0;padding-top:8px;padding-bottom:8px}.header nav{width:100%;justify-content:space-between;gap:12px}.header nav a{min-height:36px}.header>.wordmark{margin:auto}.contact-page{grid-template-columns:1fr;padding-block:48px;gap:35px;min-height:0}.contact-page .about-symbol{justify-self:start}.project-heading{padding-top:30px}.project-heading h1{font-size:44px;overflow-wrap:break-word}.project-feature{padding:20px 14px 55px}.project-feature>img{max-height:65vh}.project-feature .reveal-tag{font-size:9px;bottom:14px;left:14px}.page-about .about h1{font-size:42px}.home-work .section-heading .text-link{margin-top:16px}.project-next{margin-top:40px}}
+.header nav a[aria-current="page"]{text-decoration:none}.header nav a::after{bottom:2px;background:#9a7300}
