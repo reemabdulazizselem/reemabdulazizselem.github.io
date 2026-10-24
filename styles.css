@@ -148,3 +148,12 @@ footer .wordmark .expressive-wordmark{width:128px;height:85px}
 /* Finished-only artwork does not need a reveal canvas or touch capture. */
 .artwork-only-viewer .viewer-controls,.artwork-only .water-reveal,.artwork-only #sketch-image,.artwork-only .stage-label{display:none}
 .art-stage.artwork-only{touch-action:auto;cursor:auto}
+
+/* Project artwork is interactive immediately, in the normal page flow. */
+.inline-viewer{padding:28px;background:#e9ecf4;min-width:0}
+.inline-viewer .art-stage{margin:0 auto;max-width:100%}
+.inline-viewer .art-stage>img:first-child{max-height:78dvh}
+.inline-viewer #close-viewer{display:none}
+.inline-viewer .keyboard-hint{margin-bottom:0;line-height:1.6}
+.inline-viewer.artwork-only-viewer .keyboard-hint{display:none}
+@media(max-width:600px){.inline-viewer{padding:14px}.inline-viewer .art-stage>img:first-child{max-height:65dvh}.inline-viewer .viewer-controls{gap:10px}.inline-viewer .keyboard-hint{font-size:11px}}

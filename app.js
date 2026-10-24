@@ -246,7 +246,7 @@ function clearWater() {
 }
 function animateWater(now) {
   waterFrame = 0;
-  if (stage.classList.contains('artwork-only') || document.hidden || !viewer.open || stage.classList.contains('full-sketch')) { clearWater(); return; }
+  if (stage.classList.contains('artwork-only') || document.hidden || !(viewer.open || viewer.classList?.contains('inline-viewer')) || stage.classList.contains('full-sketch')) { clearWater(); return; }
   const active = stage.classList.contains('revealing');
   const dt = Math.min(40, now - (lastFrame || now - 16));
   lastFrame = now;
@@ -297,7 +297,7 @@ function animateWater(now) {
   else lastFrame = 0; // Keep the settled mask without drawing more frames.
 }
 function startWater() {
-  if (!stage.classList.contains('artwork-only') && !document.hidden && !waterFrame && viewer.open && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
+  if (!stage.classList.contains('artwork-only') && !document.hidden && !waterFrame && (viewer.open || viewer.classList?.contains('inline-viewer')) && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
 }
 sketch.addEventListener('load', startWater);
 reducedMotion.addEventListener('change', () => { clearWater(); startWater(); });
@@ -347,6 +347,7 @@ document.querySelectorAll('[data-project]').forEach(button => {
 });
 document.querySelector('#close-viewer').addEventListener('click', () => viewer.close());
 viewer.addEventListener('click', event => {
+  if (viewer.classList.contains('inline-viewer')) return;
   const rect = viewer.getBoundingClientRect();
   if (event.target === viewer && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) viewer.close();
 });
