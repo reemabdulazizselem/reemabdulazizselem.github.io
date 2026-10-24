@@ -42,9 +42,9 @@ html{scroll-padding-top:125px}
 .hero-picture:hover{transform:rotate(calc(4deg + var(--hero-turn,0deg)))}
 .art-star{transform:rotate(var(--star-turn,0deg))}
 .hero-stamp{transform:translateY(var(--stamp-drift,0px)) rotate(calc(13deg - var(--hero-turn,0deg)))}
-.ticker{overflow:hidden;display:block;padding:22px 0}
+.ticker{overflow:hidden;display:block;padding:22px 0;max-width:1440px;margin-inline:auto}
 .ticker-track{display:flex;width:max-content;will-change:transform}
-.ticker-group{display:flex;align-items:center;justify-content:space-around;min-width:100vw;gap:50px;padding:0 35px;flex-shrink:0;white-space:nowrap}
+.ticker-group{display:flex;align-items:center;justify-content:space-around;min-width:min(100vw,1440px);gap:50px;padding:0 35px;flex-shrink:0;white-space:nowrap}
 .about-symbol{transform:rotate(var(--about-turn,0deg))}
 .motion-ready .scroll-reveal{opacity:0;transform:translate3d(0,32px,0);transition:opacity .75s ease var(--reveal-delay,0ms),transform .9s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0ms)}
 .motion-ready .scroll-reveal.is-revealed,.motion-ready .scroll-reveal:focus-within{opacity:1;transform:translate3d(0,0,0)}
