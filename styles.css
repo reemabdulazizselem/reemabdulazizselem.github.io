@@ -157,3 +157,9 @@ footer .wordmark .expressive-wordmark{width:128px;height:85px}
 .inline-viewer .keyboard-hint{margin-bottom:0;line-height:1.6}
 .inline-viewer.artwork-only-viewer .keyboard-hint{display:none}
 @media(max-width:600px){.inline-viewer{padding:14px}.inline-viewer .art-stage>img:first-child{max-height:65dvh}.inline-viewer .viewer-controls{gap:10px}.inline-viewer .keyboard-hint{font-size:11px}}
+
+/* User-supplied lettering, traced as scalable paths with filled inactive e counters. */
+.wordmark .supplied-wordmark{width:127px;height:75px}
+.supplied-wordmark .logo-eye{width:98px;height:98px}
+footer .wordmark .supplied-wordmark{width:144px;height:85px}
+@media(max-width:600px){.wordmark .supplied-wordmark{width:108px;height:64px}footer .wordmark .supplied-wordmark{width:118px;height:70px}}
