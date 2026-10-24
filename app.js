@@ -433,7 +433,7 @@ const brandSatellites = [...document.querySelectorAll('.brand-satellite')];
 // Four concave sides, joined by rounded paths around the sharp tips.
 // Arc-length parameterization keeps the speed even without measuring the DOM.
 function brandContourPoint(progress) {
-  const gap = .30;
+  const gap = .18;
   const phase = ((progress % 4) + 4) % 4;
   const quadrant = Math.floor(phase);
   const distance = (phase - quadrant) * (1 + gap);
