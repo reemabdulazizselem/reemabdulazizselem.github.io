@@ -642,44 +642,45 @@ if (document.readyState === 'complete') previewOnArrival();
 else window.addEventListener('load', previewOnArrival, { once: true });
 document.addEventListener('visibilitychange', previewOnArrival);
 
-// Native cursor remains responsive even when page animation is throttled.
+// The actual pointer is a native SVG cursor, so tracking never waits for animation.
+// Only the decorative tail/rays use a DOM layer; it rests when the mouse is idle.
 const cursorDevice = window.matchMedia('(hover: hover) and (pointer: fine)');
-const exploreCursor = document.createElement('span');
-exploreCursor.className = 'explore-cursor';
-exploreCursor.textContent = 'Explore';
-exploreCursor.setAttribute('aria-hidden', 'true');
-document.body.append(exploreCursor);
-let exploreTarget = null;
-function hideExploreCursor() {
-  exploreTarget = null;
-  exploreCursor.classList.remove('visible');
+const pointerDecor = document.createElement('span');
+pointerDecor.className = 'pointer-decoration';
+pointerDecor.setAttribute('aria-hidden', 'true');
+pointerDecor.innerHTML = `<svg class="pointer-tail" width="62" height="82" viewBox="0 0 62 82"><g fill="none" stroke="#5661ed" stroke-width="1.2"><path d="M1 1C29 20 22 37 14 51S9 73 19 81"/><path d="M1 24Q4 31 12 28Q5 33 8 39Q2 34-3 36Q3 30 1 24Z"/></g><path fill="#5661ed" d="M25 51Q24 60 35 60Q26 63 28 72Q23 64 15 65Q25 62 25 51Z"/></svg><svg class="pointer-rays" width="30" height="26" viewBox="0 0 60 52"><path d="M30 2L32 13M45 3L42 14M57 12L49 20M4 20L16 24M2 35L15 34M10 49L20 42" fill="none" stroke="#5661ed" stroke-width="3" stroke-linecap="round"/></svg>`;
+document.body.append(pointerDecor);
+let pointerRestTimer;
+let pointerAnimating = false;
+function restPointer() {
+  clearTimeout(pointerRestTimer);
+  pointerAnimating = false;
+  pointerDecor.classList.remove('moving');
 }
-function positionExploreCursor(event) {
-  if (!exploreTarget || event.pointerType !== 'mouse') return;
-  const x = Math.max(4, Math.min(window.innerWidth - 76, event.clientX + 20));
-  const y = Math.max(4, Math.min(window.innerHeight - 76, event.clientY + 20));
-  exploreCursor.style.transform = `translate3d(${x}px,${y}px,0)`;
+function hidePointerDecor() { restPointer(); pointerDecor.classList.remove('visible'); }
+function updatePointerDecor(event) {
+  if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || document.hidden) { hidePointerDecor(); return; }
+  const target = event.target instanceof Element ? event.target : null;
+  const interactive = !!target?.closest('a,button,input,select,textarea,[role="button"],.logo-eye,.eye-hitbox');
+  const host = target?.closest('dialog[open]') || document.body;
+  if (pointerDecor.parentElement !== host) host.append(pointerDecor);
+  pointerDecor.classList.toggle('clickable', interactive);
+  pointerDecor.classList.add('visible');
+  pointerDecor.style.transform = `translate3d(${event.clientX}px,${event.clientY}px,0)`;
+  if (!pointerAnimating) { pointerDecor.classList.add('moving'); pointerAnimating = true; }
+  clearTimeout(pointerRestTimer);
+  pointerRestTimer = setTimeout(restPointer, 180);
 }
-document.addEventListener('pointerover', event => {
-  if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || viewer.open) {
-    hideExploreCursor(); return;
-  }
-  const target = event.target.closest('[data-project], [data-project-link]');
-  if (target !== exploreTarget) {
-    exploreTarget = target;
-    exploreCursor.classList.toggle('visible', !!target);
-  }
-  positionExploreCursor(event);
-}, { passive: true });
-window.addEventListener('pointermove', positionExploreCursor, { passive: true });
-document.addEventListener('pointerout', event => { if (!event.relatedTarget) hideExploreCursor(); });
-document.addEventListener('pointerdown', hideExploreCursor, { passive: true });
-window.addEventListener('scroll', hideExploreCursor, { passive: true });
-window.addEventListener('blur', hideExploreCursor);
-document.addEventListener('visibilitychange', hideExploreCursor);
-document.addEventListener('keydown', hideExploreCursor);
-cursorDevice.addEventListener('change', hideExploreCursor);
-reducedMotion.addEventListener('change', hideExploreCursor);
+window.addEventListener('pointermove', updatePointerDecor, {passive:true});
+document.addEventListener('pointerover', updatePointerDecor, {passive:true});
+document.addEventListener('pointerout', event => { if (!event.relatedTarget) hidePointerDecor(); });
+window.addEventListener('blur', hidePointerDecor);
+window.addEventListener('scroll', hidePointerDecor, {passive:true});
+document.addEventListener('visibilitychange', hidePointerDecor);
+document.addEventListener('keydown', hidePointerDecor);
+document.addEventListener('close', hidePointerDecor, true);
+cursorDevice.addEventListener('change', hidePointerDecor);
+reducedMotion.addEventListener('change', hidePointerDecor);
 
 // Move the existing comparison into a top-layer dialog; preserve its reveal state.
 const maximizeArtwork = document.querySelector('#maximize-artwork');

@@ -175,3 +175,20 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 .art-max-dialog .artwork-only-viewer .art-stage>img:first-child{max-height:calc(100dvh - 90px)}
 .art-max-dialog .viewer-controls{margin-top:12px}
 @media(max-width:600px){.art-max-dialog .inline-viewer{padding:12px}.art-max-dialog .art-stage>img:first-child{max-height:calc(100dvh - 205px)}}
+
+/* Native pointer artwork stays responsive; decorative motion is mouse-only. */
+@media(hover:hover) and (pointer:fine){
+ html,body,body *{cursor:url("assets/pointer-regular.svg") 18 19,default!important}
+ a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable.svg") 21 22,pointer!important}
+}
+.pointer-decoration{position:fixed;left:0;top:0;width:0;height:0;z-index:2147483647;pointer-events:none;display:none}
+.pointer-decoration.visible{display:block}
+.pointer-decoration svg{position:absolute;overflow:visible;pointer-events:none}
+.pointer-tail{left:32px;top:33px;transform-origin:1px 1px;animation:tail-sway .75s ease-in-out infinite alternate;animation-play-state:paused}
+.pointer-rays{left:-17px;top:-17px;display:none;animation:pointer-spark .7s ease-in-out infinite alternate;animation-play-state:paused}
+.pointer-decoration.clickable .pointer-tail{display:none}
+.pointer-decoration.clickable .pointer-rays{display:block}
+.pointer-decoration.moving svg{animation-play-state:running}
+@keyframes tail-sway{from{transform:rotate(-7deg)}to{transform:rotate(8deg)}}
+@keyframes pointer-spark{from{opacity:.35;transform:scale(.9)}to{opacity:1;transform:scale(1.08)}}
+@media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.pointer-decoration{display:none!important}}
