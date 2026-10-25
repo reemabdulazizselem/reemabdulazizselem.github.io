@@ -208,3 +208,37 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 .footer-legal{max-width:380px;font-size:11px;line-height:1.7}.footer-legal p{margin:0 0 3px}.footer-legal a{text-decoration:underline;text-underline-offset:3px}.footer-legal>a{display:inline-flex;align-items:center;min-height:32px}
 .privacy-page{padding-top:65px;padding-bottom:80px;max-width:1000px}.privacy-page h1{font-size:clamp(44px,6vw,72px)}.privacy-page .intro{max-width:660px}.privacy-page h2{font-size:25px;letter-spacing:-.5px;line-height:1.3;margin:38px 0 12px}.privacy-page p{font-size:15px;line-height:1.85;color:var(--muted);overflow-wrap:anywhere}.privacy-page p a{text-decoration:underline;text-underline-offset:3px}.privacy-page .privacy-date{font-size:12px}.privacy-page>.text-link{margin-top:30px;display:inline-block}
 @media(max-width:600px){.footer-legal{width:100%;order:3}.footer-legal p{width:auto;text-align:left}.privacy-page{padding-top:40px;padding-bottom:50px}.privacy-page h2{font-size:23px}}
+
+/* Theme colors change only the interface, never the artwork. */
+:root{color-scheme:light;--pointer-blue:#131943}
+:root[data-theme="dark"]{color-scheme:dark;--paper:#11162b;--ink:#f3f0e6;--muted:#b9bed0;--blue:#b5c2ff;--line:#343c55;--pointer-blue:#aab8ff}
+.theme-toggle{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;padding:10px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);align-self:center}
+.theme-toggle:hover{background:var(--yellow);color:#131943}
+.theme-toggle svg{grid-area:1/1;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.theme-sun{display:none}
+[data-theme="dark"] .theme-sun{display:block}
+[data-theme="dark"] .theme-moon{display:none}
+[data-theme="dark"] .header.scrolled{background:rgba(17,22,43,.96);box-shadow:0 5px 22px #0002}
+[data-theme="dark"] em{color:var(--yellow)}
+[data-theme="dark"] .header nav a::after{background:var(--yellow)}
+[data-theme="dark"] .hero-picture{box-shadow:12px 22px 0 #29324e}
+[data-theme="dark"] .orbit{border-color:#46516e}
+[data-theme="dark"] .hero-stamp{color:#131943}
+[data-theme="dark"] .project-image,[data-theme="dark"] .project-image.dark,[data-theme="dark"] .project-image.teal,[data-theme="dark"] .project-feature,[data-theme="dark"] .inline-viewer,[data-theme="dark"] .art-max-dialog{background:#1d253e}
+[data-theme="dark"] .close:hover{background:#343c55}
+[data-theme="dark"] .pill,[data-theme="dark"] #maximize-artwork,[data-theme="dark"] .viewer-controls button,[data-theme="dark"] .filters button.active{background:#b5c2ff;color:#11162b}
+[data-theme="dark"] .pill:hover,[data-theme="dark"] #maximize-artwork:hover,[data-theme="dark"] button:hover .project-arrow{background:var(--yellow);color:#131943}
+[data-theme="dark"] .skip{background:var(--yellow);color:#131943}
+[data-theme="dark"] .brand-blue{filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(101%)}
+[data-theme="dark"] .brand-static{background-image:none}
+[data-theme="dark"] .brand-static::before{content:'';position:absolute;inset:0;background:url('assets/logo-blue.png') center/22px 22px no-repeat;filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(101%)}
+[data-theme="dark"] .reveal-tag .brand-static::before{background-size:14px 14px}
+.pointer-tail g,.pointer-tail .tail-star-small,.pointer-tail .tail-star-large{stroke:var(--pointer-blue)}
+.pointer-tail .tail-star-large{fill:var(--pointer-blue)}
+@keyframes tail-small-fill{0%,100%{fill:transparent}50%{fill:var(--pointer-blue)}}
+@keyframes tail-large-fill{0%,100%{fill:var(--pointer-blue)}50%{fill:transparent}}
+@media(hover:hover) and (pointer:fine){
+ html[data-theme="dark"],html[data-theme="dark"] body,html[data-theme="dark"] body *{cursor:url("assets/pointer-regular-dark.svg") 12 12,default!important}
+ html[data-theme="dark"] a,html[data-theme="dark"] a *,html[data-theme="dark"] button,html[data-theme="dark"] button *,html[data-theme="dark"] input,html[data-theme="dark"] input *,html[data-theme="dark"] select,html[data-theme="dark"] textarea,html[data-theme="dark"] [role="button"],html[data-theme="dark"] [role="button"] *,html[data-theme="dark"] .logo-eye,html[data-theme="dark"] .logo-eye *,html[data-theme="dark"] .eye-hitbox,html[data-theme="dark"] .eye-hitbox *{cursor:url("assets/pointer-clickable-dark.svg") 13 14,pointer!important}
+}
+@media(max-width:600px){.header nav{align-items:center;gap:8px}.theme-toggle{width:44px;height:44px}}
