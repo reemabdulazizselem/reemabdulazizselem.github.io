@@ -178,8 +178,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 
 /* Native pointer artwork stays responsive; decorative motion is mouse-only. */
 @media(hover:hover) and (pointer:fine){
- html,body,body *{cursor:url("assets/pointer-regular.svg") 18 19,default!important}
- a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable.svg") 21 22,pointer!important}
+ html,body,body *{cursor:url("assets/pointer-regular.svg?v=small-2") 12 12,default!important}
+ a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable.svg?v=yellow-2") 13 14,pointer!important}
 }
 .pointer-decoration{position:fixed;left:0;top:0;width:0;height:0;z-index:2147483647;pointer-events:none;display:none}
 .pointer-decoration.visible{display:block}
@@ -192,3 +192,7 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 @keyframes tail-sway{from{transform:rotate(-7deg)}to{transform:rotate(8deg)}}
 @keyframes pointer-spark{from{opacity:.35;transform:scale(.9)}to{opacity:1;transform:scale(1.08)}}
 @media(prefers-reduced-motion:reduce),(hover:none),(pointer:coarse){.pointer-decoration{display:none!important}}
+
+/* Smaller artwork cursors; the tail is bent by damped motion instead of a sway loop. */
+.pointer-tail{left:20px;top:21px;width:40px;height:53px;animation:none}
+.pointer-rays{left:-11px;top:-11px;width:19px;height:17px}

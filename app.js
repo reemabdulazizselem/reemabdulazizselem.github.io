@@ -648,16 +648,48 @@ const cursorDevice = window.matchMedia('(hover: hover) and (pointer: fine)');
 const pointerDecor = document.createElement('span');
 pointerDecor.className = 'pointer-decoration';
 pointerDecor.setAttribute('aria-hidden', 'true');
-pointerDecor.innerHTML = `<svg class="pointer-tail" width="62" height="82" viewBox="0 0 62 82"><g fill="none" stroke="#5661ed" stroke-width="1.2"><path d="M1 1C29 20 22 37 14 51S9 73 19 81"/><path d="M1 24Q4 31 12 28Q5 33 8 39Q2 34-3 36Q3 30 1 24Z"/></g><path fill="#5661ed" d="M25 51Q24 60 35 60Q26 63 28 72Q23 64 15 65Q25 62 25 51Z"/></svg><svg class="pointer-rays" width="30" height="26" viewBox="0 0 60 52"><path d="M30 2L32 13M45 3L42 14M57 12L49 20M4 20L16 24M2 35L15 34M10 49L20 42" fill="none" stroke="#5661ed" stroke-width="3" stroke-linecap="round"/></svg>`;
+pointerDecor.innerHTML = `<svg class="pointer-tail" width="62" height="82" viewBox="0 0 62 82"><g fill="none" stroke="#5661ed" stroke-width="1.2"><path class="tail-line" d="M1 1C29 20 22 37 14 51S9 73 19 81"/><path class="tail-star-small" d="M1 24Q4 31 12 28Q5 33 8 39Q2 34-3 36Q3 30 1 24Z"/></g><path class="tail-star-large" fill="#5661ed" d="M25 51Q24 60 35 60Q26 63 28 72Q23 64 15 65Q25 62 25 51Z"/></svg><svg class="pointer-rays" width="30" height="26" viewBox="0 0 60 52"><path d="M30 2L32 13M45 3L42 14M57 12L49 20M4 20L16 24M2 35L15 34M10 49L20 42" fill="none" stroke="#f4dc55" stroke-width="3" stroke-linecap="round"/></svg>`;
 document.body.append(pointerDecor);
+const tailLine = pointerDecor.querySelector('.tail-line');
+const tailSmallStar = pointerDecor.querySelector('.tail-star-small');
+const tailLargeStar = pointerDecor.querySelector('.tail-star-large');
+let tailFrame = 0, tailTime = 0;
+let tailX = 0, tailY = 0, tailVX = 0, tailVY = 0;
+let tailTargetX = 0, tailTargetY = 0;
+let previousPointer = null;
+function drawTail() {
+  tailLine.setAttribute('d', `M1 1C${29+tailX*.2} ${20+tailY*.2} ${22+tailX*.45} ${37+tailY*.45} ${14+tailX*.65} ${51+tailY*.65}S${9+tailX*.9} ${73+tailY*.9} ${19+tailX} ${81+tailY}`);
+  tailSmallStar.setAttribute('transform', `translate(${tailX*.3} ${tailY*.3})`);
+  tailLargeStar.setAttribute('transform', `translate(${tailX*.75} ${tailY*.75})`);
+}
+function animateTail(now) {
+  tailFrame = 0;
+  const dt = Math.min(.032, (now-(tailTime || now-16))/1000);
+  tailTime = now;
+  tailVX += ((tailTargetX-tailX)*150-tailVX*19)*dt;
+  tailVY += ((tailTargetY-tailY)*150-tailVY*19)*dt;
+  tailX += tailVX*dt; tailY += tailVY*dt;
+  drawTail();
+  if (Math.abs(tailTargetX-tailX)+Math.abs(tailTargetY-tailY)+Math.abs(tailVX)+Math.abs(tailVY) > .15) tailFrame = requestAnimationFrame(animateTail);
+  else { tailX=tailTargetX;tailY=tailTargetY;tailVX=tailVY=tailTime=0;drawTail(); }
+}
+function startTail() {
+  if (!tailFrame && !document.hidden && !reducedMotion.matches && pointerDecor.classList.contains('visible') && !pointerDecor.classList.contains('clickable')) tailFrame=requestAnimationFrame(animateTail);
+}
+function resetTail() {
+  cancelAnimationFrame(tailFrame);
+  tailFrame=tailTime=tailX=tailY=tailVX=tailVY=tailTargetX=tailTargetY=0;
+  previousPointer=null;drawTail();
+}
 let pointerRestTimer;
 let pointerAnimating = false;
 function restPointer() {
   clearTimeout(pointerRestTimer);
   pointerAnimating = false;
   pointerDecor.classList.remove('moving');
+  tailTargetX=tailTargetY=0;previousPointer=null;startTail();
 }
-function hidePointerDecor() { restPointer(); pointerDecor.classList.remove('visible'); }
+function hidePointerDecor() { restPointer(); pointerDecor.classList.remove('visible'); resetTail(); }
 function updatePointerDecor(event) {
   if (event.pointerType !== 'mouse' || !cursorDevice.matches || reducedMotion.matches || document.hidden) { hidePointerDecor(); return; }
   const target = event.target instanceof Element ? event.target : null;
@@ -667,6 +699,16 @@ function updatePointerDecor(event) {
   pointerDecor.classList.toggle('clickable', interactive);
   pointerDecor.classList.add('visible');
   pointerDecor.style.transform = `translate3d(${event.clientX}px,${event.clientY}px,0)`;
+  if (interactive) resetTail();
+  else if (event.type === 'pointermove') {
+    if (previousPointer) {
+      const elapsed=Math.max(8, event.timeStamp-previousPointer.time);
+      tailTargetX=Math.max(-55,Math.min(55,-(event.clientX-previousPointer.x)/elapsed*35));
+      tailTargetY=Math.max(-45,Math.min(45,-(event.clientY-previousPointer.y)/elapsed*35));
+      startTail();
+    }
+    previousPointer={x:event.clientX,y:event.clientY,time:event.timeStamp};
+  }
   if (!pointerAnimating) { pointerDecor.classList.add('moving'); pointerAnimating = true; }
   clearTimeout(pointerRestTimer);
   pointerRestTimer = setTimeout(restPointer, 180);
