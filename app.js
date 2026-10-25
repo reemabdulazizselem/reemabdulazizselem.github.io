@@ -648,7 +648,7 @@ const cursorDevice = window.matchMedia('(hover: hover) and (pointer: fine)');
 const pointerDecor = document.createElement('span');
 pointerDecor.className = 'pointer-decoration';
 pointerDecor.setAttribute('aria-hidden', 'true');
-pointerDecor.innerHTML = `<svg class="pointer-tail" width="62" height="82" viewBox="0 0 62 82"><g fill="none" stroke="#5166e5" stroke-width="1.2"><path class="tail-line" d="M1 1C29 20 22 37 14 51S9 73 19 81"/><path class="tail-star-small" d="M1 24Q4 31 12 28Q5 33 8 39Q2 34-3 36Q3 30 1 24Z"/></g><path class="tail-star-large" fill="#5166e5" d="M25 51Q24 60 35 60Q26 63 28 72Q23 64 15 65Q25 62 25 51Z"/></svg><svg class="pointer-rays" width="30" height="26" viewBox="0 0 60 52"><path d="M30 2L32 13M45 3L42 14M57 12L49 20M4 20L16 24M2 35L15 34M10 49L20 42" fill="none" stroke="#f4dc55" stroke-width="3" stroke-linecap="round"/></svg>`;
+pointerDecor.innerHTML = `<svg class="pointer-tail" width="62" height="82" viewBox="0 0 62 82"><g fill="none" stroke="#131943" stroke-width="1.2"><path class="tail-line" d="M1 1C29 20 22 37 14 51S9 73 19 81"/><path class="tail-star-small" d="M1 24Q4 31 12 28Q5 33 8 39Q2 34-3 36Q3 30 1 24Z"/></g><path class="tail-star-large" fill="#131943" d="M25 51Q24 60 35 60Q26 63 28 72Q23 64 15 65Q25 62 25 51Z"/></svg><svg class="pointer-rays" width="30" height="26" viewBox="0 0 60 52"><path d="M30 2L32 13M45 3L42 14M57 12L49 20M4 20L16 24M2 35L15 34M10 49L20 42" fill="none" stroke="#f4dc55" stroke-width="3" stroke-linecap="round"/></svg>`;
 document.body.append(pointerDecor);
 const tailLine = pointerDecor.querySelector('.tail-line');
 const tailSmallStar = pointerDecor.querySelector('.tail-star-small');
