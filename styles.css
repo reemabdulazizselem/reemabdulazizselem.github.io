@@ -244,3 +244,9 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 @media(max-width:600px){.header nav{align-items:center;gap:8px}.theme-toggle{width:44px;height:44px}}
 
 [data-theme="dark"] .pointer-rays path{stroke:#aab8ff}
+
+/* Keep the contact invitation on two deliberate lines. */
+.contact-page .contact-heading{font-size:clamp(27px,3.7vw,53px);letter-spacing:-.045em;line-height:1.15}
+.contact-heading-line{display:block;white-space:nowrap}
+.contact-heading-ending{display:flex;align-items:baseline;gap:.16em;font-size:1.45em;margin-top:.06em}
+.contact-heading-star{display:inline-block;flex:none;width:.58em;height:.58em;align-self:center;margin-top:.1em;object-fit:contain}
