@@ -229,9 +229,9 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 [data-theme="dark"] .pill,[data-theme="dark"] #maximize-artwork,[data-theme="dark"] .viewer-controls button,[data-theme="dark"] .filters button.active{background:#b5c2ff;color:#11162b}
 [data-theme="dark"] .pill:hover,[data-theme="dark"] #maximize-artwork:hover,[data-theme="dark"] button:hover .project-arrow{background:var(--yellow);color:#131943}
 [data-theme="dark"] .skip{background:var(--yellow);color:#131943}
-[data-theme="dark"] .brand-blue{filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(88%)}
+[data-theme="dark"] .brand-blue{filter:drop-shadow(1px 0 0 #7485bc) drop-shadow(-1px 0 0 #7485bc) drop-shadow(0 1px 0 #7485bc) drop-shadow(0 -1px 0 #7485bc)}
 [data-theme="dark"] .brand-static{background-image:none}
-[data-theme="dark"] .brand-static::before{content:'';position:absolute;inset:0;background:url('assets/logo-blue.png') center/22px 22px no-repeat;filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(88%)}
+[data-theme="dark"] .brand-static::before{content:'';position:absolute;inset:0;background:url('assets/logo-blue.png') center/22px 22px no-repeat;filter:drop-shadow(1px 0 0 #7485bc) drop-shadow(-1px 0 0 #7485bc) drop-shadow(0 1px 0 #7485bc) drop-shadow(0 -1px 0 #7485bc)}
 [data-theme="dark"] .reveal-tag .brand-static::before{background-size:14px 14px}
 .pointer-tail g,.pointer-tail .tail-star-small,.pointer-tail .tail-star-large{stroke:var(--pointer-blue)}
 .pointer-tail .tail-star-large{fill:var(--pointer-blue)}
