@@ -178,8 +178,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 
 /* Native pointer artwork stays responsive; decorative motion is mouse-only. */
 @media(hover:hover) and (pointer:fine){
- html,body,body *{cursor:url("assets/pointer-regular-yellow.svg") 12 12,default!important}
- a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable-yellow.svg") 13 14,pointer!important}
+ html,body,body *{cursor:url("assets/pointer-regular-blue-yellow.svg") 12 12,default!important}
+ a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable-blue-yellow.svg") 13 14,pointer!important}
 }
 .pointer-decoration{position:fixed;left:0;top:0;width:0;height:0;z-index:2147483647;pointer-events:none;display:none}
 .pointer-decoration.visible{display:block}
