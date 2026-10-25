@@ -178,8 +178,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 
 /* Native pointer artwork stays responsive; decorative motion is mouse-only. */
 @media(hover:hover) and (pointer:fine){
- html,body,body *{cursor:url("assets/pointer-regular.svg?v=small-2") 12 12,default!important}
- a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable.svg?v=yellow-2") 13 14,pointer!important}
+ html,body,body *{cursor:url("assets/pointer-regular.svg?v=design-blue-3") 12 12,default!important}
+ a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable.svg?v=design-blue-3") 13 14,pointer!important}
 }
 .pointer-decoration{position:fixed;left:0;top:0;width:0;height:0;z-index:2147483647;pointer-events:none;display:none}
 .pointer-decoration.visible{display:block}
@@ -196,3 +196,11 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 /* Smaller artwork cursors; the tail is bent by damped motion instead of a sway loop. */
 .pointer-tail{left:20px;top:21px;width:40px;height:53px;animation:none}
 .pointer-rays{left:-11px;top:-11px;width:19px;height:17px}
+
+/* Complementary fills alternate only during active mouse use. */
+.pointer-tail .tail-star-small,.pointer-tail .tail-star-large{stroke:#5166e5;stroke-width:1.2;animation-duration:2.2s;animation-timing-function:steps(1,end);animation-iteration-count:infinite;animation-play-state:paused}
+.pointer-tail .tail-star-small{animation-name:tail-small-fill}
+.pointer-tail .tail-star-large{animation-name:tail-large-fill}
+.pointer-decoration.visible.moving:not(.clickable) .tail-star-small,.pointer-decoration.visible.moving:not(.clickable) .tail-star-large{animation-play-state:running}
+@keyframes tail-small-fill{0%,100%{fill:transparent}50%{fill:#5166e5}}
+@keyframes tail-large-fill{0%,100%{fill:#5166e5}50%{fill:transparent}}
