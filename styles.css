@@ -163,3 +163,15 @@ footer .wordmark .expressive-wordmark{width:128px;height:85px}
 .supplied-wordmark .logo-eye{width:98px;height:98px}
 footer .wordmark .supplied-wordmark{width:144px;height:85px}
 @media(max-width:600px){.wordmark .supplied-wordmark{width:108px;height:64px}footer .wordmark .supplied-wordmark{width:118px;height:70px}}
+
+.artwork-toolbar{display:flex;justify-content:flex-end;margin-bottom:14px}
+#maximize-artwork{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:10px 16px;border-radius:24px;background:var(--ink);color:var(--paper);font-size:12px}
+#maximize-artwork:hover{background:var(--yellow);color:var(--ink)}
+#maximize-artwork span{font-size:20px;line-height:1}
+.art-max-dialog{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;background:#e9ecf4;overflow:auto}
+.art-max-dialog .inline-viewer{min-height:100%;padding:16px 24px}
+.art-max-dialog .artwork-toolbar{margin-bottom:10px}
+.art-max-dialog .art-stage>img:first-child{max-height:calc(100dvh - 180px);max-width:100%;width:auto;height:auto}
+.art-max-dialog .artwork-only-viewer .art-stage>img:first-child{max-height:calc(100dvh - 90px)}
+.art-max-dialog .viewer-controls{margin-top:12px}
+@media(max-width:600px){.art-max-dialog .inline-viewer{padding:12px}.art-max-dialog .art-stage>img:first-child{max-height:calc(100dvh - 205px)}}

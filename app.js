@@ -680,3 +680,43 @@ document.addEventListener('visibilitychange', hideExploreCursor);
 document.addEventListener('keydown', hideExploreCursor);
 cursorDevice.addEventListener('change', hideExploreCursor);
 reducedMotion.addEventListener('change', hideExploreCursor);
+
+// Move the existing comparison into a top-layer dialog; preserve its reveal state.
+const maximizeArtwork = document.querySelector('#maximize-artwork');
+if (maximizeArtwork) {
+  let expandedArtwork;
+  let artworkPlaceholder;
+  let originalImageSizes;
+  const artworkImage = document.querySelector('#final-image');
+  maximizeArtwork.addEventListener('click', () => {
+    if (expandedArtwork?.open) { expandedArtwork.close(); return; }
+    if (!expandedArtwork) {
+      expandedArtwork = document.createElement('dialog');
+      expandedArtwork.className = 'art-max-dialog';
+      expandedArtwork.setAttribute('aria-label', 'Maximized artwork');
+      document.body.append(expandedArtwork);
+      expandedArtwork.addEventListener('close', () => {
+        artworkPlaceholder.replaceWith(viewer);
+        document.body.classList.remove('modal-open');
+        maximizeArtwork.setAttribute('aria-expanded', 'false');
+        maximizeArtwork.innerHTML = 'Maximize artwork <span aria-hidden="true">⤢</span>';
+        if (originalImageSizes === null) artworkImage.removeAttribute('sizes');
+        else artworkImage.setAttribute('sizes', originalImageSizes);
+        stage.classList.remove('revealing');
+        clearWater();
+        maximizeArtwork.focus({preventScroll:true});
+      });
+    }
+    artworkPlaceholder = document.createElement('div');
+    artworkPlaceholder.style.height = `${viewer.getBoundingClientRect().height}px`;
+    viewer.replaceWith(artworkPlaceholder);
+    expandedArtwork.append(viewer);
+    originalImageSizes = artworkImage.getAttribute('sizes');
+    artworkImage.setAttribute('sizes', '100vw');
+    maximizeArtwork.setAttribute('aria-expanded', 'true');
+    maximizeArtwork.innerHTML = 'Exit enlarged view <span aria-hidden="true">×</span>';
+    document.body.classList.add('modal-open');
+    expandedArtwork.showModal();
+    maximizeArtwork.focus({preventScroll:true});
+  });
+}
