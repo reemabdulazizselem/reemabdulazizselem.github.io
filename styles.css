@@ -123,10 +123,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,.art-stage:focus-visibl
 .explore-cursor{width:60px;height:60px;background:var(--blue);color:var(--paper);border-color:var(--yellow)}
 
 /* Golden yellow keeps emphasized words readable on ivory. */
-em{color:#9a7300}
+em{color:#a17a00}
 
 /* Separate pages share the same visual language and interaction layer. */
-nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current="page"]{text-decoration:underline;text-decoration-color:#9a7300;text-underline-offset:8px}
+nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current="page"]{text-decoration:underline;text-decoration-color:#a17a00;text-underline-offset:8px}
 .text-link{display:inline-block;padding:12px 0;font-size:13px;border-bottom:1px solid var(--ink)}
 .home-work .gallery{margin-top:36px}.home-work .landscape{align-self:center}.home-work .offset{padding-top:0}
 .page-work .section-heading h1{margin-bottom:0;font-size:clamp(48px,5.7vw,76px)}
@@ -135,7 +135,7 @@ nav a{min-height:44px;display:inline-flex;align-items:center}nav a[aria-current=
 .project-page{padding-top:35px;padding-bottom:70px}.project-heading{max-width:850px;padding-block:48px 35px}.project-heading h1{font-size:clamp(44px,5.6vw,76px)}.project-heading .intro{max-width:580px}.comparison-note{font-size:13px;line-height:1.7;color:var(--muted)}
 .project-feature{position:relative;display:block;width:100%;padding:36px;background:#e9ecf4}.project-feature>img{width:auto;height:auto;max-height:78vh;margin:auto}.project-feature .reveal-tag{color:var(--ink)}.project-feature:hover .reveal-tag{background:var(--yellow)}.project-context{margin:55px auto;max-width:900px}.project-next{margin-top:65px;padding-top:30px;border-top:1px solid var(--line)}.project-next .eyebrow{margin-bottom:12px}.project-next>a{font-size:clamp(26px,3vw,42px);letter-spacing:-1px}.project-next>a span{margin-left:20px}.pill:hover{color:var(--ink)}
 @media(max-width:600px){.header{height:auto;min-height:114px;flex-wrap:wrap;gap:0;padding-top:8px;padding-bottom:8px}.header nav{width:100%;justify-content:space-between;gap:12px}.header nav a{min-height:36px}.header>.wordmark{margin:auto}.contact-page{grid-template-columns:1fr;padding-block:48px;gap:35px;min-height:0}.contact-page .about-symbol{justify-self:start}.project-heading{padding-top:30px}.project-heading h1{font-size:44px;overflow-wrap:break-word}.project-feature{padding:20px 14px 55px}.project-feature>img{max-height:65vh}.project-feature .reveal-tag{font-size:9px;bottom:14px;left:14px}.page-about .about h1{font-size:42px}.home-work .section-heading .text-link{margin-top:16px}.project-next{margin-top:40px}}
-.header nav a[aria-current="page"]{text-decoration:none}.header nav a::after{bottom:2px;background:#9a7300}
+.header nav a[aria-current="page"]{text-decoration:none}.header nav a::after{bottom:2px;background:#a17a00}
 
 /* Stacked expressive signature; the two interactive e letters vary by placement. */
 .wordmark .expressive-wordmark{display:block;width:113px;height:75px;overflow:visible;color:var(--ink);flex:none}
@@ -229,9 +229,9 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 [data-theme="dark"] .pill,[data-theme="dark"] #maximize-artwork,[data-theme="dark"] .viewer-controls button,[data-theme="dark"] .filters button.active{background:#b5c2ff;color:#11162b}
 [data-theme="dark"] .pill:hover,[data-theme="dark"] #maximize-artwork:hover,[data-theme="dark"] button:hover .project-arrow{background:var(--yellow);color:#131943}
 [data-theme="dark"] .skip{background:var(--yellow);color:#131943}
-[data-theme="dark"] .brand-blue{filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(101%)}
+[data-theme="dark"] .brand-blue{filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(88%)}
 [data-theme="dark"] .brand-static{background-image:none}
-[data-theme="dark"] .brand-static::before{content:'';position:absolute;inset:0;background:url('assets/logo-blue.png') center/22px 22px no-repeat;filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(101%)}
+[data-theme="dark"] .brand-static::before{content:'';position:absolute;inset:0;background:url('assets/logo-blue.png') center/22px 22px no-repeat;filter:brightness(0) saturate(100%) invert(80%) sepia(18%) saturate(1020%) hue-rotate(191deg) brightness(88%)}
 [data-theme="dark"] .reveal-tag .brand-static::before{background-size:14px 14px}
 .pointer-tail g,.pointer-tail .tail-star-small,.pointer-tail .tail-star-large{stroke:var(--pointer-blue)}
 .pointer-tail .tail-star-large{fill:var(--pointer-blue)}
