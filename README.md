@@ -26,3 +26,5 @@ The original single-page site is preserved by Git tag `single-page-checkpoint-20
 Four more backgrounds: garden house, cat market (with sketches), little shop and traveling home (artwork only). New project pages: project-manor.html, project-market.html, project-shop.html, project-journey.html. Artwork-only popups omit sketch assets and animation.
 
 Project pages now show the interactive sketch reveal inline, without a second click or popup. Artwork-only projects remain static.
+
+Privacy: privacy.html describes GitHub Pages hosting, Google Fonts, session storage and email contact. Copyright and a privacy link appear on every page. Update the notice when adding analytics, forms, or other data processing. HTTPS enforcement verified 25 October 2026. GitHub account 2FA still needs owner setup.

@@ -204,3 +204,7 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 .pointer-decoration.visible.moving:not(.clickable) .tail-star-small,.pointer-decoration.visible.moving:not(.clickable) .tail-star-large{animation-play-state:running}
 @keyframes tail-small-fill{0%,100%{fill:transparent}50%{fill:#5166e5}}
 @keyframes tail-large-fill{0%,100%{fill:#5166e5}50%{fill:transparent}}
+
+.footer-legal{max-width:380px;font-size:11px;line-height:1.7}.footer-legal p{margin:0 0 3px}.footer-legal a{text-decoration:underline;text-underline-offset:3px}.footer-legal>a{display:inline-flex;align-items:center;min-height:32px}
+.privacy-page{padding-top:65px;padding-bottom:80px;max-width:1000px}.privacy-page h1{font-size:clamp(44px,6vw,72px)}.privacy-page .intro{max-width:660px}.privacy-page h2{font-size:25px;letter-spacing:-.5px;line-height:1.3;margin:38px 0 12px}.privacy-page p{font-size:15px;line-height:1.85;color:var(--muted);overflow-wrap:anywhere}.privacy-page p a{text-decoration:underline;text-underline-offset:3px}.privacy-page .privacy-date{font-size:12px}.privacy-page>.text-link{margin-top:30px;display:inline-block}
+@media(max-width:600px){.footer-legal{width:100%;order:3}.footer-legal p{width:auto;text-align:left}.privacy-page{padding-top:40px;padding-bottom:50px}.privacy-page h2{font-size:23px}}
