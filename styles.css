@@ -178,8 +178,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 
 /* Native pointer artwork stays responsive; decorative motion is mouse-only. */
 @media(hover:hover) and (pointer:fine){
- html,body,body *{cursor:url("assets/pointer-regular-navy-yellow.svg") 12 12,default!important}
- a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable-navy-yellow.svg") 13 14,pointer!important}
+ html,body,body *{cursor:url("assets/pointer-regular-navy-gold.svg") 12 12,default!important}
+ a,a *,button,button *,input,input *,select,textarea,[role="button"],[role="button"] *,.logo-eye,.logo-eye *,.eye-hitbox,.eye-hitbox *{cursor:url("assets/pointer-clickable-navy-gold.svg") 13 14,pointer!important}
 }
 .pointer-decoration{position:fixed;left:0;top:0;width:0;height:0;z-index:2147483647;pointer-events:none;display:none}
 .pointer-decoration.visible{display:block}
@@ -272,3 +272,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 .art-max-dialog .gallery-viewer .art-stage>img:first-child{max-height:100%;width:100%;height:100%}
 @media(max-width:600px){.project-description{font-size:14px}.gallery-viewer .art-stage{height:clamp(220px,68vw,400px)}.gallery-thumb{flex-basis:82px;height:62px}.gallery-thumbnails{gap:8px}.art-max-dialog .gallery-viewer .art-stage{height:calc(100dvh - 250px)}.gallery-navigation{margin:14px 0 8px}}
 
+
+/* Match the light-mode stars to the emphasized gold lettering. */
+:root:not([data-theme="dark"]) .brand-satellite img,:root:not([data-theme="dark"]) .contact-heading-star{content:url("assets/logo-gold.png")}
+:root:not([data-theme="dark"]) .brand-static::after{background-image:url("assets/logo-gold.png")}
+:root:not([data-theme="dark"]) .pointer-rays path{stroke:#a17a00}
