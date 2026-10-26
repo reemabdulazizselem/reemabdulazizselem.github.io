@@ -211,7 +211,7 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 
 /* Theme colors change only the interface, never the artwork. */
 :root{color-scheme:light;--pointer-blue:#131943}
-:root[data-theme="dark"]{color-scheme:dark;--paper:#11162b;--ink:#f3f0e6;--muted:#b9bed0;--blue:#b5c2ff;--line:#343c55;--pointer-blue:#f4dc55}
+:root[data-theme="dark"]{color-scheme:dark;--paper:#11162b;--ink:#f3f0e6;--muted:#b9bed0;--blue:#b5c2ff;--line:#343c55;--pointer-blue:#a17a00}
 .theme-toggle{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;padding:10px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--ink);align-self:center}
 .theme-toggle:hover{background:var(--yellow);color:#131943}
 .theme-toggle svg{grid-area:1/1;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -238,8 +238,8 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 @keyframes tail-small-fill{0%,100%{fill:transparent}50%{fill:var(--pointer-blue)}}
 @keyframes tail-large-fill{0%,100%{fill:var(--pointer-blue)}50%{fill:transparent}}
 @media(hover:hover) and (pointer:fine){
- html[data-theme="dark"],html[data-theme="dark"] body,html[data-theme="dark"] body *{cursor:url("assets/pointer-regular-dark-yellow-navy.svg") 12 12,default!important}
- html[data-theme="dark"] a,html[data-theme="dark"] a *,html[data-theme="dark"] button,html[data-theme="dark"] button *,html[data-theme="dark"] input,html[data-theme="dark"] input *,html[data-theme="dark"] select,html[data-theme="dark"] textarea,html[data-theme="dark"] [role="button"],html[data-theme="dark"] [role="button"] *,html[data-theme="dark"] .logo-eye,html[data-theme="dark"] .logo-eye *,html[data-theme="dark"] .eye-hitbox,html[data-theme="dark"] .eye-hitbox *{cursor:url("assets/pointer-clickable-dark-yellow-navy.svg") 13 14,pointer!important}
+ html[data-theme="dark"],html[data-theme="dark"] body,html[data-theme="dark"] body *{cursor:url("assets/pointer-regular-dark-gold-navy.svg") 12 12,default!important}
+ html[data-theme="dark"] a,html[data-theme="dark"] a *,html[data-theme="dark"] button,html[data-theme="dark"] button *,html[data-theme="dark"] input,html[data-theme="dark"] input *,html[data-theme="dark"] select,html[data-theme="dark"] textarea,html[data-theme="dark"] [role="button"],html[data-theme="dark"] [role="button"] *,html[data-theme="dark"] .logo-eye,html[data-theme="dark"] .logo-eye *,html[data-theme="dark"] .eye-hitbox,html[data-theme="dark"] .eye-hitbox *{cursor:url("assets/pointer-clickable-dark-gold-navy.svg") 13 14,pointer!important}
 }
 @media(max-width:600px){.header nav{align-items:center;gap:8px}.theme-toggle{width:44px;height:44px}}
 
