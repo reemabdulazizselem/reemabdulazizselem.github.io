@@ -28,3 +28,5 @@ Four more backgrounds: garden house, cat market (with sketches), little shop and
 Project pages now show the interactive sketch reveal inline, without a second click or popup. Artwork-only projects remain static.
 
 Privacy: privacy.html describes GitHub Pages hosting, Google Fonts, session storage and email contact. Copyright and a privacy link appear on every page. Update the notice when adding analytics, forms, or other data processing. HTTPS enforcement verified 25 October 2026. GitHub account 2FA still needs owner setup.
+
+Multi-image projects (October 2026): project-amira.html (10 images), project-bakery.html (3), project-coffee.html (10), and project-ehkeely.html (18). Their supplied descriptions are included; Behar uses its supplied concept text. gallery.js provides swipe/drag, arrows, keyboard navigation, and thumbnail selection, including the existing maximized viewer. No autoplay or background animation loop. Each image has a full WebP capped at 2000px, a 960px version, and a 240px thumbnail. Ehkeely07 precedes Ehkeely007; both are distinct images. Source artwork remains in graphic/. Metadata is embedded as gallery-data JSON on each page.
