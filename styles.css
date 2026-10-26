@@ -277,3 +277,5 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 :root:not([data-theme="dark"]) .brand-satellite img,:root:not([data-theme="dark"]) .contact-heading-star{content:url("assets/logo-gold.png")}
 :root:not([data-theme="dark"]) .brand-static::after{background-image:url("assets/logo-gold.png")}
 :root:not([data-theme="dark"]) .pointer-rays path{stroke:#a17a00}
+
+:root:not([data-theme="dark"]) .header::after{background:#a17a00}
