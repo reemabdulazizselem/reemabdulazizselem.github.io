@@ -300,3 +300,7 @@ footer .wordmark .supplied-wordmark{width:144px;height:85px}
 .gallery-viewer .art-stage>button:hover:not(:disabled)::before,.gallery-viewer .art-stage>button:focus-visible::before{background:var(--yellow);color:#131943}
 .gallery-viewer .art-stage>button:disabled{visibility:hidden}
 .gallery-viewer .art-stage>button:focus-visible{outline-offset:-4px}
+
+/* Small solid stars need a lighter gold to visually match the fine lettering. */
+:root:not([data-theme="dark"]) .brand-satellite img,
+:root:not([data-theme="dark"]) .brand-static::after{filter:brightness(1.18) saturate(.94)}
