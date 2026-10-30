@@ -13,16 +13,20 @@
   let current = 0;
   let gesture = null;
   let swiped = false;
-  // Reuse the accessible controls as left/right click areas over the artwork.
+  // Keep accessible navigation in fixed gutters beside the artwork.
   stage.append(previous, next);
   previous.textContent = '';
   next.textContent = '';
-  function alignControls() {
-    const item = images[current];
-    const width = Math.min(stage.clientWidth, stage.clientHeight * item.width / item.height);
-    stage.style.setProperty('--gallery-image-inset', `${Math.max(0, (stage.clientWidth - width) / 2)}px`);
+  function updateSketch() {
+    const source = images[current].sketch;
+    const sketch = gallery.querySelector('#sketch-image');
+    stage.classList.toggle('artwork-only', !source);
+    gallery.classList.toggle('artwork-only-viewer', !source);
+    if (source) sketch.src = source;
+    else sketch.removeAttribute('src');
+    stage.dispatchEvent(new Event('gallery-image-change'));
   }
-  new ResizeObserver(alignControls).observe(stage);
+  updateSketch();
   stage.addEventListener('click', event => {
     if (swiped) { event.preventDefault(); event.stopImmediatePropagation(); swiped = false; }
   }, true);
@@ -31,13 +35,13 @@
     index = Math.max(0, Math.min(images.length - 1, index));
     if (index === current) return;
     current = index;
-    alignControls();
     const item = images[index];
     image.alt = item.alt;
     image.width = item.width;
     image.height = item.height;
     image.srcset = `${item.small} ${item.smallWidth}w, ${item.src} ${item.width}w`;
     image.src = item.small;
+    updateSketch();
     position.textContent = `${index + 1} / ${images.length}`;
     previous.disabled = index === 0;
     next.disabled = index === images.length - 1;
@@ -62,6 +66,7 @@
   });
   stage.addEventListener('pointerdown', event => {
     if (!event.isPrimary || event.button !== 0) return;
+    if (!stage.classList.contains('artwork-only')) return;
     swiped = false;
     gesture = { id: event.pointerId, x: event.clientX, y: event.clientY };
     if (!event.target.closest('button')) stage.setPointerCapture(event.pointerId);

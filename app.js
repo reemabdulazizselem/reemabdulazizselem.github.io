@@ -285,7 +285,14 @@ function animateWater(now) {
   waterContext.clearRect(0, 0, water.width, water.height);
   if (sketch.complete && sketch.naturalWidth) {
     waterContext.globalCompositeOperation = 'source-over';
-    waterContext.drawImage(sketch, 0, 0, water.width, water.height);
+    if (viewer.hasAttribute('data-gallery')) {
+      const final = stage.querySelector('#final-image');
+      const box = final.getBoundingClientRect();
+      const bounds = stage.getBoundingClientRect();
+      const ratio = Math.min(box.width / final.width, box.height / final.height);
+      const w = final.width * ratio, h = final.height * ratio;
+      waterContext.drawImage(sketch, (box.left - bounds.left + (box.width - w) / 2) * pixelRatio, (box.top - bounds.top + (box.height - h) / 2) * pixelRatio, w * pixelRatio, h * pixelRatio);
+    } else waterContext.drawImage(sketch, 0, 0, water.width, water.height);
     waterContext.globalCompositeOperation = 'destination-in';
     waterContext.drawImage(mask, 0, 0);
     waterContext.globalCompositeOperation = 'source-over';
@@ -314,6 +321,11 @@ function resetFullSketch() {
   toggle.setAttribute('aria-pressed', 'false');
   toggle.textContent = 'Show full sketch';
 }
+stage.addEventListener('gallery-image-change', () => {
+  stage.classList.remove('revealing');
+  clearWater();
+  resetFullSketch();
+});
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
     const project = projects[button.dataset.project];
@@ -358,6 +370,7 @@ viewer.addEventListener('close', () => {
 });
 function revealAt(event) {
   if (stage.classList.contains('artwork-only')) return;
+  if (event.target.closest('button')) { stage.classList.remove('revealing'); return; }
   const rect = stage.getBoundingClientRect();
   setPosition((event.clientX - rect.left) / rect.width * 100, (event.clientY - rect.top) / rect.height * 100);
   stage.classList.add('revealing');
@@ -365,6 +378,7 @@ function revealAt(event) {
 stage.addEventListener('pointermove', revealAt);
 stage.addEventListener('pointerdown', event => {
   if (stage.classList.contains('artwork-only')) return;
+  if (event.target.closest('button')) return;
   revealAt(event);
   stage.setPointerCapture(event.pointerId);
 });
@@ -378,6 +392,7 @@ stage.addEventListener('focus', () => stage.classList.add('revealing'));
 stage.addEventListener('blur', () => stage.classList.remove('revealing'));
 stage.addEventListener('keydown', event => {
   if (stage.classList.contains('artwork-only')) return;
+  if (viewer.hasAttribute('data-gallery')) return;
   const moves = { ArrowLeft: [-3, 0], ArrowRight: [3, 0], ArrowUp: [0, -3], ArrowDown: [0, 3] };
   if (!moves[event.key]) return;
   event.preventDefault();
