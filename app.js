@@ -4,9 +4,9 @@ const projects = {
   studio: { title: 'The sunlit studio', category: 'Background art', prefix: 'studio', width: 1800, height: 950 },
   room: { title: 'A room of stories', category: 'Background art', prefix: 'room', width: 1800, height: 967 } ,
   manor: {"title": "The garden house", "category": "Background art", "prefix": "manor", "width": 1800, "height": 949, "hasSketch": true},
-  market: {"title": "The cat market", "category": "Background art", "prefix": "market", "width": 1800, "height": 1010, "hasSketch": true},
-  shop: {"title": "Inside the little shop", "category": "Background art", "prefix": "shop", "width": 1800, "height": 938, "hasSketch": false},
-  journey: {"title": "A home on the move", "category": "Background art", "prefix": "journey", "width": 1547, "height": 1800, "hasSketch": false}
+  market: {"title": "Bolaq El-Qatqout", "category": "Background art", "prefix": "market", "width": 1800, "height": 1010, "hasSketch": true},
+  shop: {"title": "Sobhy El Farrargi", "category": "Background art", "prefix": "shop", "width": 1800, "height": 938, "hasSketch": false},
+  journey: {"title": "Marsa Qatqout", "category": "Background art", "prefix": "journey", "width": 1547, "height": 1800, "hasSketch": false}
 };
 const viewer = document.querySelector('#viewer');
 const stage = document.querySelector('#art-stage');

@@ -58,4 +58,26 @@
     if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.3) select(current + (dx < 0 ? 1 : -1));
   });
   stage.addEventListener('pointercancel', () => { gesture = null; });
+
+  let wheelAmount = 0;
+  let lastWheelTime = -Infinity;
+  let lastWheelChange = -Infinity;
+  gallery.addEventListener('wheel', event => {
+    if (!gallery.closest('.art-max-dialog[open]') || event.ctrlKey) return;
+    // Horizontal scrolling over the queue still scrolls its thumbnails.
+    if (strip.contains(event.target) && Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+    if (!delta) return;
+    event.preventDefault();
+    const now = event.timeStamp;
+    if (now - lastWheelTime > 200 || Math.sign(delta) !== Math.sign(wheelAmount)) wheelAmount = 0;
+    lastWheelTime = now;
+    if (now - lastWheelChange < 350) { wheelAmount = 0; return; }
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stage.clientHeight : 1;
+    wheelAmount += delta * unit;
+    if (Math.abs(wheelAmount) < 48) return;
+    select(current + Math.sign(wheelAmount));
+    wheelAmount = 0;
+    lastWheelChange = now;
+  }, { passive: false });
 })();
