@@ -12,11 +12,26 @@
   const position = gallery.querySelector('.gallery-position');
   let current = 0;
   let gesture = null;
+  let swiped = false;
+  // Reuse the accessible controls as left/right click areas over the artwork.
+  stage.append(previous, next);
+  previous.textContent = '';
+  next.textContent = '';
+  function alignControls() {
+    const item = images[current];
+    const width = Math.min(stage.clientWidth, stage.clientHeight * item.width / item.height);
+    stage.style.setProperty('--gallery-image-inset', `${Math.max(0, (stage.clientWidth - width) / 2)}px`);
+  }
+  new ResizeObserver(alignControls).observe(stage);
+  stage.addEventListener('click', event => {
+    if (swiped) { event.preventDefault(); event.stopImmediatePropagation(); swiped = false; }
+  }, true);
 
   function select(index) {
     index = Math.max(0, Math.min(images.length - 1, index));
     if (index === current) return;
     current = index;
+    alignControls();
     const item = images[index];
     image.alt = item.alt;
     image.width = item.width;
@@ -47,15 +62,19 @@
   });
   stage.addEventListener('pointerdown', event => {
     if (!event.isPrimary || event.button !== 0) return;
+    swiped = false;
     gesture = { id: event.pointerId, x: event.clientX, y: event.clientY };
-    stage.setPointerCapture(event.pointerId);
+    if (!event.target.closest('button')) stage.setPointerCapture(event.pointerId);
   });
   stage.addEventListener('pointerup', event => {
     if (!gesture || gesture.id !== event.pointerId) return;
     const dx = event.clientX - gesture.x;
     const dy = event.clientY - gesture.y;
     gesture = null;
-    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.3) select(current + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      swiped = true;
+      select(current + (dx < 0 ? 1 : -1));
+    }
   });
   stage.addEventListener('pointercancel', () => { gesture = null; });
 
