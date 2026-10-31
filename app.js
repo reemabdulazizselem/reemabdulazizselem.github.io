@@ -203,6 +203,25 @@ let waterHeight = 0;
 let pixelRatio = 1;
 let position = { x: 50, y: 50 };
 let opener;
+let artworkBounds = { x: 0, y: 0, width: 0, height: 0 };
+
+function alignSketch() {
+  const final = stage.querySelector('#final-image');
+  const box = final.getBoundingClientRect();
+  const bounds = stage.getBoundingClientRect();
+  let width = box.width, height = box.height;
+  if (getComputedStyle(final).objectFit === 'contain') {
+    // Image.width/height report the CSS box, not the artwork's aspect ratio.
+    const sourceWidth = Number(final.getAttribute('width')) || final.naturalWidth;
+    const sourceHeight = Number(final.getAttribute('height')) || final.naturalHeight;
+    const ratio = Math.min(box.width / sourceWidth, box.height / sourceHeight);
+    width = sourceWidth * ratio;
+    height = sourceHeight * ratio;
+  }
+  artworkBounds = { x: box.left - bounds.left + (box.width - width) / 2, y: box.top - bounds.top + (box.height - height) / 2, width, height };
+  Object.assign(sketch.style, { left: `${artworkBounds.x}px`, top: `${artworkBounds.y}px`, width: `${width}px`, height: `${height}px`, padding: '0', objectFit: 'fill' });
+}
+stage.querySelector('#final-image').addEventListener('load', alignSketch);
 
 function resizeWater() {
   const rect = stage.getBoundingClientRect();
@@ -213,6 +232,7 @@ function resizeWater() {
     canvas.width = Math.round(waterWidth * pixelRatio);
     canvas.height = Math.round(waterHeight * pixelRatio);
   }
+  alignSketch();
   startWater();
 }
 new ResizeObserver(resizeWater).observe(stage);
@@ -285,14 +305,8 @@ function animateWater(now) {
   waterContext.clearRect(0, 0, water.width, water.height);
   if (sketch.complete && sketch.naturalWidth) {
     waterContext.globalCompositeOperation = 'source-over';
-    if (viewer.hasAttribute('data-gallery')) {
-      const final = stage.querySelector('#final-image');
-      const box = final.getBoundingClientRect();
-      const bounds = stage.getBoundingClientRect();
-      const ratio = Math.min(box.width / final.width, box.height / final.height);
-      const w = final.width * ratio, h = final.height * ratio;
-      waterContext.drawImage(sketch, (box.left - bounds.left + (box.width - w) / 2) * pixelRatio, (box.top - bounds.top + (box.height - h) / 2) * pixelRatio, w * pixelRatio, h * pixelRatio);
-    } else waterContext.drawImage(sketch, 0, 0, water.width, water.height);
+    const { x, y, width, height } = artworkBounds;
+    waterContext.drawImage(sketch, x * pixelRatio, y * pixelRatio, width * pixelRatio, height * pixelRatio);
     waterContext.globalCompositeOperation = 'destination-in';
     waterContext.drawImage(mask, 0, 0);
     waterContext.globalCompositeOperation = 'source-over';
@@ -325,6 +339,7 @@ stage.addEventListener('gallery-image-change', () => {
   stage.classList.remove('revealing');
   clearWater();
   resetFullSketch();
+  alignSketch();
 });
 document.querySelectorAll('[data-project]').forEach(button => {
   button.addEventListener('click', () => {
