@@ -266,7 +266,7 @@ function clearWater() {
 }
 function animateWater(now) {
   waterFrame = 0;
-  if (stage.classList.contains('artwork-only') || document.hidden || !(viewer.open || viewer.classList?.contains('inline-viewer')) || stage.classList.contains('full-sketch')) { clearWater(); return; }
+  if (stage.classList.contains('artwork-only') || document.hidden || !(viewer.open || viewer.classList?.contains('inline-viewer'))) { clearWater(); return; }
   const active = stage.classList.contains('revealing');
   const dt = Math.min(40, now - (lastFrame || now - 16));
   lastFrame = now;
@@ -303,10 +303,11 @@ function animateWater(now) {
   maskContext.filter = 'none';
   waterContext.setTransform(1, 0, 0, 1, 0, 0);
   waterContext.clearRect(0, 0, water.width, water.height);
-  if (sketch.complete && sketch.naturalWidth) {
+  const revealImage = stage.classList.contains('full-sketch') ? stage.querySelector('#final-image') : sketch;
+  if (revealImage.complete && revealImage.naturalWidth) {
     waterContext.globalCompositeOperation = 'source-over';
     const { x, y, width, height } = artworkBounds;
-    waterContext.drawImage(sketch, x * pixelRatio, y * pixelRatio, width * pixelRatio, height * pixelRatio);
+    waterContext.drawImage(revealImage, x * pixelRatio, y * pixelRatio, width * pixelRatio, height * pixelRatio);
     waterContext.globalCompositeOperation = 'destination-in';
     waterContext.drawImage(mask, 0, 0);
     waterContext.globalCompositeOperation = 'source-over';
@@ -318,7 +319,7 @@ function animateWater(now) {
   else lastFrame = 0; // Keep the settled mask without drawing more frames.
 }
 function startWater() {
-  if (!stage.classList.contains('artwork-only') && !document.hidden && !waterFrame && (viewer.open || viewer.classList?.contains('inline-viewer')) && !stage.classList.contains('full-sketch')) waterFrame = requestAnimationFrame(animateWater);
+  if (!stage.classList.contains('artwork-only') && !document.hidden && !waterFrame && (viewer.open || viewer.classList?.contains('inline-viewer'))) waterFrame = requestAnimationFrame(animateWater);
 }
 sketch.addEventListener('load', startWater);
 reducedMotion.addEventListener('change', () => { clearWater(); startWater(); });
@@ -421,9 +422,10 @@ document.querySelector('#lens-size').addEventListener('input', event => {
 });
 toggle.addEventListener('click', () => {
   const full = stage.classList.toggle('full-sketch');
-  if (full) clearWater();
+  clearWater();
   toggle.setAttribute('aria-pressed', String(full));
-  toggle.textContent = full ? 'Return to lens view' : 'Show full sketch';
+  toggle.textContent = full ? 'Show final artwork' : 'Show full sketch';
+  startWater();
 });
 document.querySelectorAll('[data-filter]').forEach(button => {
   button.addEventListener('click', () => {
